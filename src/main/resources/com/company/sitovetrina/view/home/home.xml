@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://home.title">
+    <layout>
+        <h1 id="homeTitle" classNames="m-xl" ></h1>
+
+        <div id="bannerHome" classNames="m-xl" ></div>
+
+
+    </layout>
+</view>

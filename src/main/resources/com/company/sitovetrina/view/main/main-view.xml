@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mainView xmlns="http://jmix.io/schema/flowui/main-view"
+          title="msg://MainView.title">
+
+    <actions>
+        <action id="logoutAction" type="logout"/>
+    </actions>
+
+    <appLayout>
+        <navigationBar >
+            <header  id="header" classNames="jmix-main-view-header horizontal-layout" css="background-color:#6495ED; color:#ffffff; justify-content: space-between; align-items: center;">
+
+                <!-- Sinistra: nome sito -->
+                <h2 id="applicationTitle" classNames="jmix-main-view-application-title">
+                    <anchor id="baseLink"
+                            href="home"
+                            text="msg://applicationTitle.text" css=" color:#ffffff;"
+                            classNames="jmix-main-view-application-title-base-link"/>
+                </h2>
+
+                <!-- Centro: menu -->
+                <nav id="navigation" classNames="jmix-main-view-navigation horizontal-layout menu-center" css="gap: 20px;">
+                    <horizontalMenu css=" color:#ffffff;" id="menu"/>
+                </nav>
+
+                <!-- Destra: userIndicator + logout -->
+                <div classNames="horizontal-layout" css="gap: 10px; align-items: center;">
+                    <hbox alignItems="CENTER">
+                        <icon  icon="lumo:user"></icon>
+                        <userIndicator id="userIndicator"/>
+                        <button css=" color:#ffffff;" id="logoutButton"
+                                action="logoutAction"
+                                classNames="jmix-logout-button"/>
+                    </hbox>
+
+                </div>
+            </header>
+        </navigationBar>
+
+        <!-- initial layout (vuoto) -->
+        <initialLayout>
+        </initialLayout>
+    </appLayout>
+</mainView>

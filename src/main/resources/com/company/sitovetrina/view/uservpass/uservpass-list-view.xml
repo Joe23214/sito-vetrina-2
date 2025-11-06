@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://uservpassListView.title"
+      focusComponent="uservpassesDataGrid">
+    <data>
+        <collection id="uservpassesDc"
+                    class="com.company.sitovetrina.entity.Uservpass">
+            <fetchPlan extends="_base">
+                <property name="id"/>
+                <property name="user" fetchPlan="_instance_name"/>
+            </fetchPlan>
+            <loader id="uservpassesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from Uservpass e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="uservpassesDl">
+            <properties include=".*"/>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createButton" action="uservpassesDataGrid.createAction"/>
+            <button id="editButton" action="uservpassesDataGrid.editAction"/>
+            <button id="removeButton" action="uservpassesDataGrid.removeAction"/>
+            <simplePagination id="pagination" dataLoader="uservpassesDl"/>
+        </hbox>
+        <dataGrid id="uservpassesDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="uservpassesDc"
+                  columnReorderingAllowed="true">
+            <actions>
+                <action id="createAction" type="list_create"/>
+                <action id="editAction" type="list_edit"/>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="password"/>
+                <column property="user"/>
+                <column property="username"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectButton" action="selectAction"/>
+            <button id="discardButton" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

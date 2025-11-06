@@ -1,0 +1,13 @@
+/* Centra il menu orizzontale nella navbar */
+.menu-center {
+    display: flex;                /* rende il container flex */
+    justify-content: center;      /* centra gli item orizzontalmente */
+    align-items: center;          /* allinea verticalmente */
+    gap: 40px;                    /* spazio tra i menu item */
+}
+
+/* Rimuove la sottolineatura dai link del menu */
+.menu-center jmix-horizontal-menu a {
+    text-decoration: none;
+    color: inherit;               /* mantiene il colore di default del testo */
+}

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://configsitovetrinaDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="configsitovetrinaDc"
+                  class="com.company.sitovetrina.entity.Configsitovetrina">
+            <fetchPlan extends="_base">
+                <property name="id"/>
+            </fetchPlan>
+            <loader id="configsitovetrinaDl"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="configsitovetrinaDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+
+            <!-- Sezione About Us -->
+            <vbox spacing="true">
+                <span text="Sezione About Us" classNames="h4"/>
+                <hbox spacing="true">
+                    <textArea id="aboutTestoField" property="aboutTesto" helperText="Descrizione About"/>
+                    <textField id="aboutTitoloField" property="aboutTitolo"  helperText="Titolo About"/>
+                </hbox>
+            </vbox>
+
+            <!-- Sezione Informazioni generali Azienda -->
+            <vbox spacing="true">
+                <span text="Informazioni generali Azienda" classNames="h4"/>
+                <hbox spacing="true">
+                    <textField id="capField" property="cap"  helperText="CAP"/>
+                    <textField id="cittaField" property="citta"  helperText="Città"/>
+                </hbox>
+                <hbox spacing="true">
+                    <textField id="emailContattiField" property="emailContatti"  helperText="Email Contatti"/>
+                    <textField id="indirizzoField" property="indirizzo"  helperText="Indirizzo"/>
+                </hbox>
+                <hbox spacing="true">
+                    <textField id="pivaField" property="piva"  helperText="P.IVA"/>
+                    <textField id="ragioneSocialeField" property="ragioneSociale"  helperText="Ragione Sociale"/>
+                </hbox>
+                <hbox spacing="true">
+                    <textField id="telefonoField" property="telefono"  helperText="Telefono"/>
+                </hbox>
+            </vbox>
+
+            <!-- Sezione Dettagli Sito -->
+            <vbox spacing="true">
+                <span text="Sezione per dettagli sito" classNames="h4"/>
+                <hbox spacing="true">
+                    <textArea id="descrizioneSitoField" height="9.5em" property="descrizioneSito" width="50%" helperText="Descrizione Sito"/>
+                    <textField id="linkFacebookField" property="linkFacebook" width="50%" helperText="Link Facebook"/>
+                </hbox>
+                <hbox spacing="true">
+                    <textField id="linkInstaField" property="linkInsta" width="50%" helperText="Link Instagram"/>
+                    <textField id="linkTikTokField" property="linkTikTok" width="50%" helperText="Link TikTok"/>
+                </hbox>
+                <hbox spacing="true">
+                    <textField id="nomeSitoField" property="nomeSito" width="50%" helperText="Nome Sito"/>
+                    <textField id="testoFooterField" property="testoFooter" width="50%" helperText="Testo Footer"/>
+                </hbox>
+            </vbox>
+
+        </formLayout>
+
+        <!-- Bottoni -->
+        <hbox id="detailActions" spacing="true">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>
