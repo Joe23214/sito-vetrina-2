@@ -1,11 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
       title="msg://home.title">
-    <layout>
-        <h1 id="homeTitle" classNames="m-xl" ></h1>
 
-        <div id="bannerHome" classNames="m-xl" ></div>
+    <layout classNames="home-layout">
 
+        <!-- LOGO IN ALTO -->
+        <div id="logoContainer" classNames="logo-container">
+            <image id="logo" classNames="logo-top"/>
+        </div>
+
+        <!-- HERO BANNER (80%) -->
+        <div id="hero" classNames="hero-banner">
+            <image id="heroImage" classNames="hero-image"/>
+            <div id="heroOverlay" classNames="hero-overlay">
+                <div id="heroText" classNames="hero-text">
+                    <h2>La nostra grande passione</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOME SITO -->
+        <h1 id="homeTitle" classNames="home-title m-xl"></h1>
+
+        <!-- DESCRIZIONE SITO -->
+        <div id="descrCard" classNames="about-card">
+            <div id="descrText" classNames="about-text"></div>
+        </div>
+
+        <!-- GIF / MEDIA PRINCIPALE (75%) -->
+        <div id="mediaSection" classNames="media-section">
+            <image id="mediaGif" classNames="media-content"/>
+        </div>
+
+        <!-- GALLERIA IMMAGINI + ABOUT -->
+        <div id="gallerySection" classNames="gallery-section">
+
+            <!-- Prime due immagini affiancate -->
+            <div id="galleryGrid" classNames="gallery-grid">
+                <image id="foto1" classNames="gallery-item"/>
+                <image id="foto2" classNames="gallery-item"/>
+            </div>
+
+            <!-- Sezione About -->
+            <div id="aboutCard" classNames="about-card">
+                <h3 id="aboutTitle"></h3>
+                <div id="aboutText" classNames="about-text"></div>
+            </div>
+
+            <!-- Terza foto singola -->
+            <image id="foto3" classNames="gallery-item single"/>
+
+            <!-- Carosello immagini finali -->
+            <div id="carouselSection" classNames="carousel-section">
+                <div id="carousel" classNames="carousel">
+                    <image id="carouselFoto1" classNames="carousel-image"/>
+                    <image id="carouselFoto2" classNames="carousel-image"/>
+                    <image id="carouselFoto3" classNames="carousel-image"/>
+
+                    <button id="prevBtn" classNames="carousel-btn prev">&#10094;</button>
+                    <button id="nextBtn" classNames="carousel-btn next">&#10095;</button>
+                </div>
+            </div>
+        </div>
 
     </layout>
 </view>

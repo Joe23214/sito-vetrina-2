@@ -29,7 +29,8 @@ public class MainView extends StandardMainView {
     private Div navBarPrinc;
     @Autowired
     private ViewNavigators viewNavigators;
-
+    @ViewComponent
+    private Div footerContainer;
     private HorizontalLayout footer;
     @Autowired
     private DataManager dataManager;
@@ -67,7 +68,12 @@ public class MainView extends StandardMainView {
                 .set("background-color", "#6495ED")
                 .set("color", "#ffffff")
                 .set("padding", "40px 60px")
-                .set("text-align", "left");
+                .set("text-align", "left")
+                .set("position", "fixed")
+                .set("bottom", "0")
+                .set("left", "0")
+                .set("width", "100%")
+                .set("z-index", "10");
         footerLayout.setSpacing(true);
 
         // --- Colonna 1: Riferimenti ---
@@ -154,7 +160,7 @@ public class MainView extends StandardMainView {
         footerLayout.setFlexGrow(0, col3);
 
         // Aggiungi il footer alla fine del layout principale
-        appLayout.getElement().appendChild(footerLayout.getElement());
+        appLayout.addToNavbar(false, footerLayout);
     }
 
 }

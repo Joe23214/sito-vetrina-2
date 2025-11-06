@@ -11,3 +11,324 @@
     text-decoration: none;
     color: inherit;               /* mantiene il colore di default del testo */
 }
+/* === HOME PAGE COMPLETA === */
+
+/* Layout base */
+.home-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+    text-align: center;
+    padding: 2rem 0 6rem 0;
+    box-sizing: border-box;
+}
+
+/* --- LOGO --- */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.logo-top {
+    max-width: 280px;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.logo-top:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+
+/* --- HERO BANNER --- */
+.hero-banner {
+    position: relative;
+    width: 80%;
+    height: 280px;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+    margin-bottom: 2.5rem;
+    background: linear-gradient(180deg, #fafafa 0%, #f1f1f1 100%);
+}
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.3);
+}
+.hero-text h2 {
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
+
+/* --- TITOLO & DESCRIZIONE SITO --- */
+.home-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #111;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+.about-text, #descrText {
+    width: 75%;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* --- GIF / MEDIA SECTION --- */
+.media-section {
+    width: 75%;
+    margin: 3rem auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+.media-content {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+}
+
+/* --- GALLERIA PRIMA SEZIONE (2 FOTO) --- */
+.gallery-section {
+    width: 90%;
+    margin: 3rem auto;
+}
+.gallery-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+}
+.gallery-item {
+    flex: 1 1 calc(50% - 1.5rem);
+    max-width: 600px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+.gallery-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.25);
+}
+
+/* --- ABOUT SECTION --- */
+.about-card {
+    width: 75%;
+    margin: 2rem auto 3rem auto;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 2rem 3rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+#aboutTitle {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #111;
+}
+#aboutText {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* --- TERZA FOTO --- */
+.gallery-section .gallery-item:last-of-type {
+    width: 75%;
+    height: 400px;
+    border-radius: 20px;
+    display: block;
+    margin: 0 auto 3rem auto;
+}
+
+/* --- CAROSELLO --- */
+.carousel-section {
+    position: relative;
+    width: 85%;
+    margin: 3rem auto;
+    overflow: hidden;
+    border-radius: 22px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+    background: #000;
+}
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 550px;
+    display: flex;
+}
+.carousel-image {
+    flex-shrink: 0;
+    width: 100%;
+    height: 550px;
+    object-fit: cover;
+    display: none;
+}
+.carousel-image.active {
+    display: block;
+    animation: fadein 1s ease-in-out;
+}
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255,255,255,0.75);
+    border: none;
+    font-size: 2.2rem;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0.4em 0.6em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 10;
+}
+.carousel-btn:hover {
+    background-color: rgba(255,255,255,0.95);
+    transform: scale(1.1);
+}
+.carousel-btn.prev { left: 20px; }
+.carousel-btn.next { right: 20px; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1200px) {
+    .hero-banner { height: 240px; }
+    .media-content { height: 350px; }
+    .carousel, .carousel-image { height: 450px; }
+    .gallery-item { height: 280px; }
+}
+@media (max-width: 800px) {
+    .hero-banner { width: 90%; height: 200px; }
+    .home-title { font-size: 2.2rem; }
+    .media-section { width: 90%; height: auto; }
+    .media-content { height: 260px; }
+    .gallery-grid { flex-direction: column; }
+    .gallery-item { width: 100%; height: 250px; }
+    .about-card { width: 90%; padding: 1.5rem; }
+    .carousel, .carousel-image { height: 340px; }
+}
+/* === PREVIEW UPLOAD CONFIG === */
+
+.preview-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fafafa;
+    border: none;                  /* ❌ niente bordo visibile */
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 12px 16px;
+    margin: 16px auto;
+    width: 300px;                  /* dimensione standard */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.preview-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+}
+
+.preview-box button {
+    margin-top: 8px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.preview-box button:hover {
+    background: #0056b3;
+}
+
+/* Contenitore immagine/video */
+.preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 180px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+    margin-top: 6px;
+}
+
+.preview-container img,
+.preview-container video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+}
+/* --- FIX HERO IMAGE (vaadin-image compatibile) --- */
+vaadin-image.hero-image,
+.hero-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Seleziona l'immagine interna di vaadin-image */
+vaadin-image.hero-image::part(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Garantisce che il contenitore del banner abbia sempre altezza visibile */
+.hero-banner {
+    min-height: 280px;
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Overlay resta sopra ma non blocca l’immagine */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}

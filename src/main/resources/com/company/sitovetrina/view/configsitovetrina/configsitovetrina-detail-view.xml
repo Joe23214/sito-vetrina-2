@@ -2,6 +2,7 @@
 <view xmlns="http://jmix.io/schema/flowui/view"
       title="msg://configsitovetrinaDetailView.title"
       focusComponent="form">
+
     <data>
         <instance id="configsitovetrinaDc"
                   class="com.company.sitovetrina.entity.Configsitovetrina">
@@ -11,70 +12,168 @@
             <loader id="configsitovetrinaDl"/>
         </instance>
     </data>
+
     <facets>
         <dataLoadCoordinator auto="true"/>
     </facets>
+
     <actions>
         <action id="saveAction" type="detail_saveClose"/>
         <action id="closeAction" type="detail_close"/>
     </actions>
+
     <layout>
-        <formLayout id="form" dataContainer="configsitovetrinaDc">
+        <formLayout id="form" dataContainer="configsitovetrinaDc" width="100%">
             <responsiveSteps>
                 <responsiveStep minWidth="0" columns="1"/>
-                <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
 
-            <!-- Sezione About Us -->
-            <vbox spacing="true">
-                <span text="Sezione About Us" classNames="h4"/>
+            <!-- =================================================== -->
+            <!-- 📘 Sezione About Us -->
+            <!-- =================================================== -->
+            <vbox spacing="true" width="75%"
+                  css="border:1px solid #ccc; border-radius:10px; padding:20px; margin:0 auto 15px auto;">
+                <span text="📘 Sezione About Us" classNames="h4"/>
                 <hbox spacing="true">
-                    <textArea id="aboutTestoField" property="aboutTesto" helperText="Descrizione About"/>
-                    <textField id="aboutTitoloField" property="aboutTitolo"  helperText="Titolo About"/>
+                    <textArea id="aboutTestoField" property="aboutTesto" helperText="Descrizione About" width="50%"/>
+                    <textField id="aboutTitoloField" property="aboutTitolo" helperText="Titolo About" width="50%"/>
                 </hbox>
             </vbox>
 
-            <!-- Sezione Informazioni generali Azienda -->
-            <vbox spacing="true">
-                <span text="Informazioni generali Azienda" classNames="h4"/>
+            <!-- =================================================== -->
+            <!-- 🏢 Sezione Informazioni generali Azienda -->
+            <!-- =================================================== -->
+            <vbox spacing="true" width="75%"
+                  css="border:1px solid #ccc; border-radius:10px; padding:20px; margin:0 auto 15px auto;">
+                <span text="🏢 Informazioni generali Azienda" classNames="h4"/>
+
                 <hbox spacing="true">
-                    <textField id="capField" property="cap"  helperText="CAP"/>
-                    <textField id="cittaField" property="citta"  helperText="Città"/>
+                    <textField id="ragioneSocialeField" property="ragioneSociale" helperText="Ragione Sociale" width="50%"/>
+                    <textField id="pivaField" property="piva" helperText="P.IVA" width="50%"/>
                 </hbox>
+
                 <hbox spacing="true">
-                    <textField id="emailContattiField" property="emailContatti"  helperText="Email Contatti"/>
-                    <textField id="indirizzoField" property="indirizzo"  helperText="Indirizzo"/>
+                    <textField id="indirizzoField" property="indirizzo" helperText="Indirizzo" width="50%"/>
+                    <textField id="capField" property="cap" helperText="CAP" width="50%"/>
                 </hbox>
+
                 <hbox spacing="true">
-                    <textField id="pivaField" property="piva"  helperText="P.IVA"/>
-                    <textField id="ragioneSocialeField" property="ragioneSociale"  helperText="Ragione Sociale"/>
+                    <textField id="cittaField" property="citta" helperText="Città" width="50%"/>
+                    <textField id="telefonoField" property="telefono" helperText="Telefono" width="50%"/>
                 </hbox>
+
                 <hbox spacing="true">
-                    <textField id="telefonoField" property="telefono"  helperText="Telefono"/>
+                    <textField id="emailContattiField" property="emailContatti" helperText="Email Contatti" width="50%"/>
                 </hbox>
             </vbox>
 
-            <!-- Sezione Dettagli Sito -->
-            <vbox spacing="true">
-                <span text="Sezione per dettagli sito" classNames="h4"/>
+            <!-- =================================================== -->
+            <!-- 🌐 Sezione Dati del Sito -->
+            <!-- =================================================== -->
+            <vbox spacing="true" width="75%"
+                  css="border:1px solid #ccc; border-radius:10px; padding:20px; margin:0 auto 15px auto;">
+                <span text="🌐 Dettagli del Sito" classNames="h4"/>
+
                 <hbox spacing="true">
-                    <textArea id="descrizioneSitoField" height="9.5em" property="descrizioneSito" width="50%" helperText="Descrizione Sito"/>
-                    <textField id="linkFacebookField" property="linkFacebook" width="50%" helperText="Link Facebook"/>
+                    <textField id="nomeSitoField" property="nomeSito" helperText="Titolo Sito" width="50%"/>
                 </hbox>
+
                 <hbox spacing="true">
-                    <textField id="linkInstaField" property="linkInsta" width="50%" helperText="Link Instagram"/>
-                    <textField id="linkTikTokField" property="linkTikTok" width="50%" helperText="Link TikTok"/>
+                    <textArea id="descrizioneSitoField" property="descrizioneSito" helperText="Descrizione Sito" width="100%" height="8em"/>
                 </hbox>
+
                 <hbox spacing="true">
-                    <textField id="nomeSitoField" property="nomeSito" width="50%" helperText="Nome Sito"/>
-                    <textField id="testoFooterField" property="testoFooter" width="50%" helperText="Testo Footer"/>
+                    <textField id="linkFacebookField" property="linkFacebook" helperText="Link Facebook" width="50%"/>
+                    <textField id="linkInstaField" property="linkInsta" helperText="Link Instagram" width="50%"/>
+                </hbox>
+
+                <hbox spacing="true">
+                    <textField id="linkTikTokField" property="linkTikTok" helperText="Link TikTok" width="50%"/>
+                    <textField id="testoFooterField" property="testoFooter" helperText="Testo Footer" width="50%"/>
                 </hbox>
             </vbox>
 
+            <!-- =================================================== -->
+            <!-- 🖼️ Sezione Uploaders -->
+            <!-- =================================================== -->
+            <vbox spacing="true" width="75%"
+                  css="border:2px solid #aaa; border-radius:10px; padding:20px; margin:0 auto 15px auto;">
+                <span text="🖼️ Sezione Upload Immagini e Media" classNames="h4"/>
+
+                <!-- tutto identico come prima -->
+                <vbox spacing="true" css="border:1px solid #ccc; border-radius:10px; padding:15px;">
+                    <span text="📷 Foto Principali Home" classNames="h5"/>
+
+                    <hbox spacing="true" alignItems="CENTER">
+                        <span text="Foto 1" classNames="h6" width="150px"/>
+                        <upload id="uploadFoto1" dropAllowed="true" autoUpload="true" maxFileSize="10485760" width="50%"/>
+                        <div id="previewFoto1" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                    </hbox>
+
+                    <hbox spacing="true" alignItems="CENTER">
+                        <span text="Foto 2" classNames="h6" width="150px"/>
+                        <upload id="uploadFoto2" dropAllowed="true" autoUpload="true" maxFileSize="10485760" width="50%"/>
+                        <div id="previewFoto2" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                    </hbox>
+
+                    <hbox spacing="true" alignItems="CENTER">
+                        <span text="Foto 3" classNames="h6" width="150px"/>
+                        <upload id="uploadFoto3" dropAllowed="true" autoUpload="true" maxFileSize="10485760" width="50%"/>
+                        <div id="previewFoto3" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                    </hbox>
+                </vbox>
+
+                <!-- LOGO + GIF -->
+                <vbox spacing="true" css="border:1px solid #ccc; border-radius:10px; padding:15px;">
+                    <span text="🎞️ Media principali" classNames="h5"/>
+                    <hbox spacing="true" alignItems="CENTER">
+                        <span text="Logo" classNames="h6" width="150px"/>
+                        <upload id="uploadLogo" dropAllowed="true" autoUpload="true" maxFileSize="10485760" width="50%"/>
+                        <div id="previewLogo" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                    </hbox>
+
+                    <!-- BANNER PRINCIPALE -->
+                    <vbox spacing="true" css="border:1px solid #ccc; border-radius:10px; padding:15px;">
+                        <span text="🏞️ Banner Principale" classNames="h5"/>
+                        <hbox spacing="true" alignItems="CENTER">
+                            <span text="Banner" classNames="h6" width="150px"/>
+                            <upload id="uploadBanner" dropAllowed="true" autoUpload="true" maxFileSize="10485760" width="50%"/>
+                            <div id="previewBanner" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                        </hbox>
+                    </vbox>
+                    <!--GIF-->
+                    <hbox spacing="true" alignItems="CENTER">
+                        <span text="GIF Home" classNames="h6" width="150px"/>
+                        <upload id="uploadGif" dropAllowed="true" autoUpload="true" maxFileSize="52428800" width="50%"/>
+                        <div id="previewGif" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                    </hbox>
+                </vbox>
+
+                <!-- CAROSELLO -->
+                <vbox spacing="true" css="border:1px solid #ccc; border-radius:10px; padding:15px;">
+                    <span text="🖼️ Immagini Carosello" classNames="h5"/>
+                    <hbox spacing="true" alignItems="CENTER">
+                        <span text="Carosello Foto 1" classNames="h6" width="150px"/>
+                        <upload id="uploadCarosello1" dropAllowed="true" autoUpload="true" maxFileSize="10485760" width="50%"/>
+                        <div id="previewCarosello1" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                    </hbox>
+
+                    <hbox spacing="true" alignItems="CENTER">
+                        <span text="Carosello Foto 2" classNames="h6" width="150px"/>
+                        <upload id="uploadCarosello2" dropAllowed="true" autoUpload="true" maxFileSize="10485760" width="50%"/>
+                        <div id="previewCarosello2" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                    </hbox>
+
+                    <hbox classNames="mb-xl" spacing="true" alignItems="CENTER">
+                        <span text="Carosello Foto 3" classNames="h6" width="150px"/>
+                        <upload id="uploadCarosello3" dropAllowed="true" autoUpload="true" maxFileSize="10485760" width="50%"/>
+                        <div id="previewCarosello3" css="border:1px solid #ddd; width:200px; height:150px; object-fit:contain;"/>
+                    </hbox >
+                </vbox>
+            </vbox>
         </formLayout>
 
-        <!-- Bottoni -->
-        <hbox id="detailActions" spacing="true">
+        <hbox id="detailActions" spacing="true" css="margin-bottom:300px;">
             <button id="saveAndCloseButton" action="saveAction"/>
             <button id="closeButton" action="closeAction"/>
         </hbox>
