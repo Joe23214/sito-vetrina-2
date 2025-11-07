@@ -28,9 +28,12 @@
         </div>
 
         <!-- GIF / MEDIA PRINCIPALE (75%) -->
+        <!-- GIF / MEDIA PRINCIPALE (75%) -->
         <div id="mediaSection" classNames="media-section">
             <image id="mediaGif" classNames="media-content"/>
         </div>
+
+
 
         <!-- GALLERIA IMMAGINI + ABOUT -->
         <div id="gallerySection" classNames="gallery-section">
@@ -61,6 +64,27 @@
                     <button id="nextBtn" classNames="carousel-btn next">&#10095;</button>
                 </div>
             </div>
+        </div>
+        <!-- FOOTER -->
+        <div id="footerSection" classNames="footer-section">
+            <div  classNames="footer-content">
+                <div classNames="footer-col">
+                    <h3>Riferimenti</h3>
+                    <p id="footerNomeSito"></p>
+                    <p id="footerRagioneSociale"></p>
+                    <p id="footerIndirizzo"></p>
+                </div>
+                <div classNames="footer-col">
+                    <h3>Contatti</h3>
+                    <p id="footerTelefono"></p>
+                    <p id="footerEmail"></p>
+                </div>
+                <div classNames="footer-col">
+                    <h3>Seguici</h3>
+                    <div id="footerSocial" classNames="footer-social"></div>
+                </div>
+            </div>
+            <p classNames="footer-copy">© 2025 Tutti i diritti riservati</p>
         </div>
 
     </layout>

@@ -7,38 +7,38 @@
     </actions>
 
     <appLayout>
-        <navigationBar >
-            <header  id="header" classNames="jmix-main-view-header horizontal-layout" css="background-color:#6495ED; color:#ffffff; justify-content: space-between; align-items: center;">
-
+        <navigationBar>
+            <header id="header" classNames="jmix-main-view-header horizontal-layout"
+                    css="background-color:#6495ED; color:#d42a3b; justify-content: space-between; align-items: center;">
                 <!-- Sinistra: nome sito -->
                 <h2 id="applicationTitle" classNames="jmix-main-view-application-title">
                     <anchor id="baseLink"
                             href="home"
-                            text="msg://applicationTitle.text" css=" color:#ffffff;"
+                            text="msg://applicationTitle.text" css="color:#d42a3b;"
                             classNames="jmix-main-view-application-title-base-link"/>
                 </h2>
 
                 <!-- Centro: menu -->
                 <nav id="navigation" classNames="jmix-main-view-navigation horizontal-layout menu-center" css="gap: 20px;">
-                    <horizontalMenu css=" color:#ffffff;" id="menu"/>
+                    <horizontalMenu css="color:#d42a3b;" id="menu"/>
                 </nav>
 
                 <!-- Destra: userIndicator + logout -->
                 <div classNames="horizontal-layout" css="gap: 10px; align-items: center;">
                     <hbox alignItems="CENTER">
-                        <icon  icon="lumo:user"></icon>
+                        <icon icon="lumo:user"/>
                         <userIndicator id="userIndicator"/>
-                        <button css=" color:#ffffff;" id="logoutButton"
+                        <button css="color:#d42a3b;" id="logoutButton"
                                 action="logoutAction"
                                 classNames="jmix-logout-button"/>
                     </hbox>
-
                 </div>
             </header>
         </navigationBar>
 
-        <!-- initial layout (vuoto) -->
+        <!-- Layout principale (content + footer) -->
         <initialLayout>
         </initialLayout>
+
     </appLayout>
 </mainView>
