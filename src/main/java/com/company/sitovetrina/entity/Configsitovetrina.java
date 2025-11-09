@@ -23,8 +23,15 @@ public class Configsitovetrina {
     @Lob
     private String aboutTesto;
 
+    @Column(name = "about_testo2")
+    @Lob
+    private String aboutTesto2;
+
     @Column(name = "about_titolo", length = 150)
     private String aboutTitolo;
+
+    @Column(name = "about_titolo2", length = 150)
+    private String aboutTitolo2;
 
     @Column(name = "cap", length = 6)
     private String cap;
@@ -182,12 +189,28 @@ public class Configsitovetrina {
         this.cap = cap;
     }
 
+    public String getAboutTitolo2() {
+        return aboutTitolo2;
+    }
+
+    public void setAboutTitolo2(String aboutTitolo2) {
+        this.aboutTitolo2 = aboutTitolo2;
+    }
+
     public String getAboutTitolo() {
         return aboutTitolo;
     }
 
     public void setAboutTitolo(String aboutTitolo) {
         this.aboutTitolo = aboutTitolo;
+    }
+
+    public String getAboutTesto2() {
+        return aboutTesto2;
+    }
+
+    public void setAboutTesto2(String aboutTesto2) {
+        this.aboutTesto2 = aboutTesto2;
     }
 
     public String getAboutTesto() {

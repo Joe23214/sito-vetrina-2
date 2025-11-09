@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu-config xmlns="http://jmix.io/schema/flowui/menu">
+    <item icon="lumo:edit" view="Configsitovetrina" title="msg://Configurazione Sito"/>
+    <item icon="vaadin:home" view="Home" title="msg://com.company.sitovetrina.view.home/home.title"/>
+    <menu icon="lumo:menu" id="menu">
+        <item view="User.list" title="msg://com.company.sitovetrina.view.user/UserListView.title"/>
         <item view="Userv.list" title="msg://com.company.sitovetrina.view.userv/uservListView.title"/>
         <item view="Uservpass.list" title="msg://com.company.sitovetrina.view.uservpass/uservpassListView.title"/>
+        <separator></separator>
         <item view="Messaggio.list" title="msg://com.company.sitovetrina.view.messaggio/messaggioListView.title"/>
         <item view="Servizio.list" title="msg://com.company.sitovetrina.view.servizio/servizioListView.title"/>
-        <item view="Configsitovetrina" title="msg://Configurazione Sito"/>
-        <item view="Home" title="msg://com.company.sitovetrina.view.home/home.title"/>
+        <item view="Configsitovetrina.list"
+              title="msg://com.company.sitovetrina.view.configsitovetrina/configsitovetrinaListView.title"/>
+    </menu>
+
 </menu-config>

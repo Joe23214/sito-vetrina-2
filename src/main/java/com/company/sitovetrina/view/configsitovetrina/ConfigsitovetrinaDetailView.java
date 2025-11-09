@@ -10,7 +10,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.StreamResourceRegistry;
@@ -44,12 +43,14 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
     @ViewComponent private Upload uploadFoto1;
     @ViewComponent private Upload uploadFoto2;
     @ViewComponent private Upload uploadFoto3;
+    @ViewComponent private Upload uploadFoto4;
     @ViewComponent private Upload uploadGif;
     @ViewComponent private Upload uploadLogo;
 
     @ViewComponent private Div previewFoto1;
     @ViewComponent private Div previewFoto2;
     @ViewComponent private Div previewFoto3;
+    @ViewComponent private Div previewFoto4;
     @ViewComponent private Div previewGif;
     @ViewComponent private Div previewLogo;
     @ViewComponent private Upload uploadCarosello1;
@@ -74,6 +75,7 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
                 "foto1", previewFoto1,
                 "foto2", previewFoto2,
                 "foto3", previewFoto3,
+                "foto4", previewFoto4,
                 "mediaGif", previewGif,
                 "logo", previewLogo,
                 "fotocarosello1", previewCarosello1,
@@ -86,6 +88,7 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
                 "foto1", uploadFoto1,
                 "foto2", uploadFoto2,
                 "foto3", uploadFoto3,
+                "foto4", uploadFoto4,
                 "mediaGif", uploadGif,
                 "logo", uploadLogo,
                 "fotocarosello1", uploadCarosello1,
@@ -187,13 +190,24 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
         Div box = new Div();
         box.addClassName("preview-box");
 
+        // Titolo sopra
+        Div titleDiv = new Div();
+        titleDiv.setText(title);
+        titleDiv.getStyle()
+                .set("font-weight", "600")
+                .set("margin-bottom", "8px");
+        box.add(titleDiv);
 
-        box.add(title);
+        // Riga con immagine e pulsante
+        Div row = new Div();
+        row.addClassName("preview-row");
 
-        // Preview contenuta (non rompe layout)
+        // Contenitore anteprima (immagine o video)
         Component preview = createPreviewComponent(file.toFile());
-        box.add(preview);
+        preview.addClassName("preview-container");
+        row.add(preview);
 
+        // Pulsante esterno (solo se serve)
         if (showRestore) {
             Button restore = new Button("Ripristina", e -> {
                 try {
@@ -204,11 +218,14 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
                     Notification.show("Errore nel ripristino: " + ex.getMessage(), 4000, Notification.Position.TOP_CENTER);
                 }
             });
-            box.add(restore);
+            restore.addClassName("restore-button");
+            row.add(restore);
         }
 
+        box.add(row);
         return box;
     }
+
     private Component createPreviewComponent(File file) {
         String name = file.getName().toLowerCase();
         StreamResource res = new StreamResource(file.getName(), () -> safeInputStream(file));

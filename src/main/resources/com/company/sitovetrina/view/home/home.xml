@@ -23,68 +23,90 @@
         <h1 id="homeTitle" classNames="home-title m-xl"></h1>
 
         <!-- DESCRIZIONE SITO -->
-        <div id="descrCard" classNames="about-card">
+        <div id="descrCard" classNames="about-card fade-in-section">
             <div id="descrText" classNames="about-text"></div>
         </div>
 
         <!-- GIF / MEDIA PRINCIPALE (75%) -->
         <!-- GIF / MEDIA PRINCIPALE (75%) -->
-        <div id="mediaSection" classNames="media-section">
+        <div id="mediaSection" classNames="media-section fade-in-section">
             <image id="mediaGif" classNames="media-content"/>
         </div>
 
 
 
         <!-- GALLERIA IMMAGINI + ABOUT -->
-        <div id="gallerySection" classNames="gallery-section">
+        <div id="gallerySection" classNames="gallery-section ">
 
             <!-- Prime due immagini affiancate -->
-            <div id="galleryGrid" classNames="gallery-grid">
+            <div id="galleryGrid" classNames="gallery-grid fade-in-section">
                 <image id="foto1" classNames="gallery-item"/>
                 <image id="foto2" classNames="gallery-item"/>
             </div>
 
             <!-- Sezione About -->
-            <div id="aboutCard" classNames="about-card">
+            <div id="aboutCard" classNames="about-card fade-in-section">
                 <h3 id="aboutTitle"></h3>
                 <div id="aboutText" classNames="about-text"></div>
             </div>
 
-            <!-- Terza foto singola -->
-            <image id="foto3" classNames="gallery-item single"/>
+            <div id="galleryGrid1" classNames="gallery-grid fade-in-section">
+                <image id="foto3" classNames="gallery-item"/>
+                <image id="foto4" classNames="gallery-item"/>
+            </div>
 
+            <!-- Sezione About -->
+            <div id="aboutCard2" classNames="about-card fade-in-section">
+                <h3 id="aboutTitle2"></h3>
+                <div id="aboutText2" classNames="about-text"></div>
+            </div>
             <!-- Carosello immagini finali -->
-            <div id="carouselSection" classNames="carousel-section">
+            <div id="carouselSection" classNames="carousel-section fade-in-section">
                 <div id="carousel" classNames="carousel">
                     <image id="carouselFoto1" classNames="carousel-image"/>
                     <image id="carouselFoto2" classNames="carousel-image"/>
                     <image id="carouselFoto3" classNames="carousel-image"/>
 
-                    <button id="prevBtn" classNames="carousel-btn prev">&#10094;</button>
-                    <button id="nextBtn" classNames="carousel-btn next">&#10095;</button>
                 </div>
             </div>
         </div>
+        <!-- =================================================== -->
+        <!-- ✉️ SEZIONE NEWSLETTER -->
+        <!-- =================================================== -->
+        <div id="newsletterSection" classNames="newsletter-section fade-in-section">
+            <div classNames="newsletter-content">
+                <div classNames="newsletter-icon">✉️</div>
+                <div classNames="newsletter-text">
+                    <h3 text="Iscriviti alla nostra Newsletter"></h3>
+                    <p text="Rimani aggiornato su novità, eventi e promozioni esclusive."></p>
+                </div>
+                <div classNames="newsletter-form">
+                    <textField id="newsletterEmail" placeholder="Inserisci la tua email" classNames="newsletter-input" />
+                    <button id="newsletterButton" text="Iscriviti" classNames="newsletter-button"/>
+                </div>
+            </div>
+        </div>
+
         <!-- FOOTER -->
         <div id="footerSection" classNames="footer-section">
             <div  classNames="footer-content">
                 <div classNames="footer-col">
-                    <h3>Riferimenti</h3>
+                    <h3 text="Riferimenti" ></h3>
                     <p id="footerNomeSito"></p>
                     <p id="footerRagioneSociale"></p>
                     <p id="footerIndirizzo"></p>
                 </div>
                 <div classNames="footer-col">
-                    <h3>Contatti</h3>
+                    <h3 text="Contatti"></h3>
                     <p id="footerTelefono"></p>
                     <p id="footerEmail"></p>
                 </div>
                 <div classNames="footer-col">
-                    <h3>Seguici</h3>
+                    <h3 text="Seguici"></h3>
                     <div id="footerSocial" classNames="footer-social"></div>
                 </div>
             </div>
-            <p classNames="footer-copy">© 2025 Tutti i diritti riservati</p>
+            <p text="© 2025 Tutti i diritti riservati"  classNames="footer-copy"></p>
         </div>
 
     </layout>

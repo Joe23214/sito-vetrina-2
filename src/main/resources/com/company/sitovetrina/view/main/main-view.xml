@@ -8,30 +8,37 @@
 
     <appLayout>
         <navigationBar>
-            <header id="header" classNames="jmix-main-view-header horizontal-layout"
-                    css="background-color:#6495ED; color:#d42a3b; justify-content: space-between; align-items: center;">
+            <header id="header" alignSelf="AUTO" classNames="jmix-main-view-header horizontal-layout"
+                    css="  justify-content: space-between; align-items: center;">
                 <!-- Sinistra: nome sito -->
                 <h2 id="applicationTitle" classNames="jmix-main-view-application-title">
                     <anchor id="baseLink"
                             href="home"
-                            text="msg://applicationTitle.text" css="color:#d42a3b;"
+                            text="msg://applicationTitle.text"
                             classNames="jmix-main-view-application-title-base-link"/>
                 </h2>
 
                 <!-- Centro: menu -->
                 <nav id="navigation" classNames="jmix-main-view-navigation horizontal-layout menu-center" css="gap: 20px;">
-                    <horizontalMenu css="color:#d42a3b;" id="menu"/>
+                    <horizontalMenu  id="menu"/>
                 </nav>
 
                 <!-- Destra: userIndicator + logout -->
                 <div classNames="horizontal-layout" css="gap: 10px; align-items: center;">
                     <hbox alignItems="CENTER">
-                        <icon icon="lumo:user"/>
+                        <icon id="userIcon" icon="lumo:user" classNames="user-icon"/>
                         <userIndicator id="userIndicator"/>
-                        <button css="color:#d42a3b;" id="logoutButton"
+                        <button id="logoutButton"
+
                                 action="logoutAction"
-                                classNames="jmix-logout-button"/>
+                                classNames="jmix-logout-button"
+                                visible="true"/>
+                        <button id="loginButton"
+                                icon="SIGN_IN"
+                                css="color:white;"
+                                visible="true"/>
                     </hbox>
+
                 </div>
             </header>
         </navigationBar>

@@ -1,375 +1,832 @@
-/* ======================================================
-   SITO VETRINA - COMPLETE THEME (Dark Elegant + Nav Red)
-   Replace entire stylesheet with this file
-   ====================================================== */
+/* ===============================
+   SITO VETRINA - VERSIONE UNIFICATA
+   Dark Red Modern - Ottimizzato
+   =============================== */
 
-/* ---------------------------
-   VARIABILI GLOBALI
-   --------------------------- */
-:root{
-    --bg: #0f1115;
-    --bg-2: #0b0c0f;
-    --surface: #121317;
-    --muted: #9aa3b2;
-    --text: #eaf0f6;
-    --accent-solid: #d42a3b; /* rosso principale */
-    --accent-gradient: linear-gradient(90deg,#d42a3b 0%,#ff3a86 100%);
-    --radius-lg: 20px;
-    --radius-md: 12px;
-    --radius-sm: 8px;
-    --glass-blur: 14px;
-    --shadow-soft: 0 8px 40px rgba(2,6,23,0.6);
-    --shadow-glow: 0 8px 60px rgba(122,91,255,0.12);
-    --transition-fast: 180ms cubic-bezier(.2,.9,.3,1);
-    --transition: 340ms cubic-bezier(.16,.84,.29,1);
-    --font-main: "Poppins", "Inter", "Helvetica Neue", Arial, sans-serif;
-    --container-max: 1280px;
-    --header-height: 88px; /* regola se necessario */
+/* --- GLOBAL VARIABLES --- */
+:root {
+    --bg-dark: #0f1115;
+    --bg-soft: #15181e;
+    --accent: #d42a3b; /* rosso principale */
+    --accent-glow: #ff4455;
+    --text-light: #f2f2f2;
+    --text-muted: #a6a6a6;
+    --transition-fast: 0.3s ease;
+    --transition-slow: 0.8s ease;
+    --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* ---------------------------
-   RESET E BASE
-   --------------------------- */
-*,
-*::before,
-*::after { box-sizing: border-box; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-html,body{height:100%;width:100%;margin:0;padding:0;font-family:var(--font-main);background:linear-gradient(180deg,#07080b 0%,var(--bg) 100%);color:var(--text);}
-img{display:block;max-width:100%;height:auto;}
-a{color:inherit;text-decoration:none;transition:color var(--transition),transform var(--transition);}
-a:hover{transform:translateY(-2px);}
+/* --- BASE STYLES --- */
+body {
+    background: var(--bg-dark);
+    color: var(--text-light);
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
 
-/* Se vuoi che il contenuto non venga nascosto dal fixed header:
-   body può usare un padding-top pari all'altezza header.
-   Se già gestisci il padding nel layout, puoi rimuovere questa regola. */
-body { padding-top: calc(var(--header-height)); }
-
-/* Accessibility: prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+/* --- HERO SECTION --- */
+.hero-banner {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.75);
+    transition: transform 5s ease;
+}
+.hero-banner:hover .hero-image { transform: scale(1.05); }
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: var(--text-light);
+}
+.hero-text h2 {
+    font-size: 2.4rem;
+    text-shadow: 0 0 16px rgba(0,0,0,0.7);
+    letter-spacing: 2px;
+    animation: fadeSlideIn 2s ease;
 }
 
-/* ---------------------------
-   LAYOUT PRINCIPALE / CONTAINER
-   --------------------------- */
-.home-layout, .app-container {
-    width:100%;
-    max-width:var(--container-max);
-    margin:0 auto;
-    padding: 24px 28px 120px; /* lascio spazio bottom, header gestito via body padding-top */
-    display:flex;
-    flex-direction:column;
-    gap:28px;
-    position:relative;
-    isolation:isolate;
+/* --- LOGO --- */
+.logo-container { text-align: center; padding: 1rem 0; }
+.logo-top {
+    max-width: 220px;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.1));
+    transition: transform var(--transition-fast);
+}
+.logo-top:hover { transform: scale(1.05); }
+
+/* --- TITOLI E TESTI --- */
+.home-title {
+    text-align: center;
+    margin: 3rem auto 1rem auto;
+    color: var(--accent);
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(212,58,77,0.4);
+}
+.about-card {
+    background: var(--bg-soft);
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    max-width: 900px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.about-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.about-text { font-size: 1.05rem; text-align: justify; color: var(--text-light); }
+.about-card h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
-/* Helpers */
-.centered { display:flex; align-items:center; justify-content:center; }
-.hidden { display:none !important; }
-
-/* ---------------------------
-   TIPOGRAFIA
-   --------------------------- */
-h1,h2,h3,h4,h5 { margin:0; color:var(--text); font-weight:700; letter-spacing:-0.02em; }
-h1{font-size:clamp(1.8rem,4.2vw,3.6rem);line-height:1.02;}
-h2{font-size:clamp(1.2rem,3.2vw,2.2rem);}
-p{margin:0 0 0.8rem 0;color:var(--muted);line-height:1.7;}
-
-/* Buttons */
-button,.btn,.cta{
-    background-image:var(--accent-gradient);
-    color:#fff;border:none;padding:10px 18px;border-radius:12px;font-weight:700;cursor:pointer;
-    box-shadow:var(--shadow-glow);transition:transform var(--transition-fast),box-shadow var(--transition-fast),opacity var(--transition-fast);
+/* --- MEDIA / GIF SECTION --- */
+.media-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 4rem auto;
+    width: 100%;
 }
-button:hover,.btn:hover,.cta:hover{transform:translateY(-4px);box-shadow:0 28px 80px rgba(212,42,59,0.12);}
-
-/* ---------------------------
-   NAVBAR (fixed, centered, animated)
-   --------------------------- */
-/* base */
-#header{
-    position:fixed;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%) translateY(-6px); /* parte leggermente sollevata per il fade-in */
-    width:92%;
-    max-width:1280px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:18px 36px;
-    background: rgba(12,12,16,0.20); /* molto trasparente inizialmente */
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,0.04);
-    box-shadow:var(--shadow-soft);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index:9999;
-    transition: all var(--transition);
-    opacity:0; /* sarà visibile dopo la prima animazione (fade-in iniziale) */
+.media-content {
+    max-width: 600px;
+    width: 80%;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    display: block;
+    margin: 0 auto;
 }
 
-/* header visibile dopo il caricamento (aggiungi .in via JS) */
-#header.in{ opacity:1; transform: translateX(-50%) translateY(0); transition: all 420ms cubic-bezier(.16,.84,.29,1); }
-
-/* inner columns */
-#header .left,#header .center,#header .right{display:flex;align-items:center;gap:12px;}
-#header .center{flex:1;justify-content:center;}
-#header .logo img{width:min(180px,20vw);height:auto;border-radius:10px;}
-
-/* menu */
-.menu-center{display:flex;gap:20px;align-items:center;}
-.menu-center a{color:var(--text);font-weight:600;padding:8px 12px;border-radius:10px;transition:background var(--transition),transform var(--transition);}
-.menu-center a:hover{background:rgba(255,255,255,0.04);}
-
-/* scrolled state: shrink + rosso + blur più forte */
-#header.scrolled{
-    transform:translateX(-50%) translateY(-6px) scale(0.82); /* ~18% più piccola */
-    width:80%;
-    padding:12px 28px;
-    border-radius:22px;
-    background: linear-gradient(180deg, rgba(212,42,59,0.92), rgba(140,20,32,0.92)); /* rosso dark solido */
-    border:1px solid rgba(255,255,255,0.06);
-    box-shadow:0 20px 90px rgba(212,42,59,0.18), 0 10px 40px rgba(0,0,0,0.7);
-    backdrop-filter: blur(18px) saturate(1.05);
-    -webkit-backdrop-filter: blur(18px) saturate(1.05);
+/* --- GALLERY SECTION --- */
+.gallery-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 4rem 0;
+    background: linear-gradient(to bottom, var(--bg-dark), #111319);
+    box-sizing: border-box;
 }
-
-/* Evita che il fixed header crei spazi "bianchi" visibili o rimanenze:
-   forziamo background trasparente per nodi di app layout eventualmente sovrapposti */
-.jmix-main-view-header, vaadin-app-layout::part(navbar), .jmix-main-view-application-title-base-link {
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 2rem;
+    justify-items: center;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
 }
-
-/* mobile */
-@media (max-width:920px){
-    #header{width:96%;padding:12px 18px;top:12px;}
-    #header.scrolled{width:92%;padding:10px 14px;border-radius:12px;transform:translateX(-50%) translateY(-4px) scale(0.95);}
-    .menu-center{display:none;} /* usa hamburger nel template se vuoi */
-}
-
-/* ---------------------------
-   HERO
-   --------------------------- */
-.hero-banner{
-    width:100%;
-    min-height:clamp(260px,36vh,520px);
-    border-radius:var(--radius-lg);
-    overflow:hidden;
-    position:relative;
-    display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.03);
-    box-shadow:0 40px 120px rgba(2,6,23,0.6);
-}
-.hero-banner .hero-image, vaadin-image.hero-image::part(img){ width:100%;height:100%;object-fit:cover;display:block;transition: transform 900ms var(--transition), filter 700ms var(--transition); }
-.hero-banner:hover .hero-image{ transform:scale(1.03) translateY(-6px); filter:saturate(1.05); }
-
-.hero-overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; background:linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.06)); }
-.hero-text h2{ font-size:clamp(1.6rem,3.8vw,2.6rem); font-weight:800; margin:0; -webkit-background-clip:text; background:linear-gradient(90deg,#ffffff 0%, #dfeaff 60%); color:transparent; text-shadow:0 10px 40px rgba(0,0,0,0.6); }
-
-/* ---------------------------
-   CARDS (con reveal on-scroll)
-   --------------------------- */
-.card{
-    position:relative;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius: var(--radius-md);
-    padding: clamp(16px,2.6vw,28px);
-    box-shadow: 0 24px 80px rgba(2,6,23,0.6);
+.gallery-item {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    overflow: hidden;
+    border-radius: 18px;
+    cursor: pointer;
+    box-shadow: 0 20px 60px rgba(2,6,23,0.55);
     border: 1px solid rgba(255,255,255,0.03);
-    overflow: visible;
-    transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
-    will-change: transform, opacity;
+    transition: transform 0.6s ease, box-shadow 0.6s ease, opacity 0.6s ease;
+}
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 1s ease, filter 1s ease;
+}
+.gallery-item:hover img {
+    transform: scale(1.08);
+    filter: brightness(1.15) saturate(1.1);
+}
+.gallery-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 28px 80px rgba(2,6,23,0.7);
+}
+.gallery-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(255,255,255,0.1), transparent 70%);
     opacity: 0;
-    transform: translateY(18px) scale(0.995);
+    transition: opacity 0.5s ease;
+}
+.gallery-item:hover::after { opacity: 1; }
+
+/* --- CAROUSEL --- */
+.carousel-section {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    height: 500px;
+    margin: 4rem auto;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    opacity: 0;
+    position: absolute;
+    transition: opacity 1.2s ease;
+}
+.carousel-image:first-child { opacity: 1; }
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.2rem;
+    background: rgba(0,0,0,0.4);
+    color: var(--text-light);
+    padding: 0.6rem 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background var(--transition-fast), transform 0.15s ease;
+    z-index: 10;
+    user-select: none;
+    animation: btnFloat 1.2s ease-in-out infinite;
+}
+.carousel-btn:hover { background: rgba(212,58,77,0.7); animation-play-state: paused; transform: scale(1.1); }
+.carousel-btn.left { left: 2%; }
+.carousel-btn.right { right: 2%; }
+.carousel-dots {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+    z-index: 11;
+}
+.carousel-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+.carousel-dot.active {
+    background: var(--accent);
+    transform: scale(1.3);
+}
+@keyframes btnFloat {
+    0%, 100% { transform: translateY(-50%) translateY(0); }
+    50% { transform: translateY(-50%) translateY(6px); }
 }
 
-/* classe che attiverà l'animazione quando l'elemento entra in viewport (JS aggiunge .in-view) */
-.card.in-view{ opacity:1; transform: translateY(0) scale(1); box-shadow: 0 40px 110px rgba(2,6,23,0.68); }
-
-/* hover */
-.card:hover{ transform: translateY(-6px) scale(1.01); }
-
-/* testo */
-.card h3{ color:#fff; margin-bottom:10px; font-weight:700; }
-.card p{ color:var(--muted); font-size:1rem; line-height:1.7; }
-
-/* sheen decorativo */
-.card::before{
-    content:"";
-    position:absolute;
-    left:-30%;
-    top:-40%;
-    width:160%;
-    height:200%;
-    pointer-events:none;
-    background: radial-gradient(600px 200px at 10% 10%, rgba(255,255,255,0.03), transparent 12%);
-    opacity:0;
-    transition: opacity 600ms var(--transition);
+/* --- FOOTER --- */
+.footer-section {
+    width: 100%;
+    background: #0d0f12;
+    color: var(--text-light);
+    padding: 3rem 0;
+    text-align: center;
+    margin-top: 6rem;
+    border-top: 2px solid var(--accent);
 }
-.card:hover::before{ opacity:1; }
-
-/* ---------------------------
-   MEDIA / GALLERY / CAROUSEL
-   --------------------------- */
-.media-section, .preview-box, .carousel-section, .gallery-item, .footer-section { will-change: transform, opacity; }
-
-/* gallery */
-.gallery-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap:18px; align-items:stretch; }
-.gallery-item{ position:relative; height:360px; overflow:hidden; border-radius:14px; cursor:pointer; box-shadow:0 20px 60px rgba(2,6,23,0.55); border:1px solid rgba(255,255,255,0.03); transition: transform 500ms var(--transition), box-shadow 500ms var(--transition); opacity:0; transform: translateY(18px); }
-.gallery-item.in-view{ opacity:1; transform: translateY(0); }
-.gallery-item img, vaadin-image.gallery-item::part(img){ width:100%; height:100%; object-fit:cover; display:block; }
-.gallery-item:hover{ transform: translateY(-8px) scale(1.02); box-shadow:0 34px 120px rgba(2,6,23,0.72); filter:saturate(1.06); }
-
-/* carousel */
-.carousel-section{ width:100%; max-width:var(--container-max); border-radius:18px; overflow:hidden; position:relative; background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.03)); box-shadow:0 40px 120px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03); height: clamp(320px,44vh,720px); }
-.carousel-image, vaadin-image.carousel-image::part(img){ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform: translateY(8px) scale(1.01); transition: opacity 700ms var(--transition), transform 700ms var(--transition); }
-.carousel-image.active{ opacity:1; transform: translateY(0) scale(1); z-index:1; }
-
-/* carousel controls */
-.carousel-btn{ position:absolute; top:50%; transform: translateY(-50%); background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.06); width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:12; transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast); backdrop-filter: blur(6px); }
-.carousel-btn:hover{ transform: translateY(-50%) scale(1.06); box-shadow:0 12px 40px rgba(2,6,23,0.6); background: rgba(255,255,255,0.08); }
-
-/* carousel dots */
-.carousel-indicators{ position:absolute; bottom:22px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:20; }
-.carousel-dot{ width:10px; height:10px; border-radius:50%; background: rgba(255,255,255,0.36); cursor:pointer; transition: transform 260ms ease, background 260ms ease; }
-.carousel-dot.active{ background: var(--accent-solid); transform: scale(1.25); box-shadow: 0 0 20px rgba(255,58,134,0.2); }
-
-/* ---------------------------
-   FORMS (VAADIN specific)
-   --------------------------- */
-vaadin-text-field, vaadin-text-area, vaadin-combo-box, vaadin-date-picker{
-    --lumo-body-text-color: var(--text);
-    --vaadin-input-field-background: #0e1114;
-    --vaadin-input-field-border-color: rgba(255,255,255,0.06);
-    --vaadin-input-field-focus-border-color: rgba(212,42,59,0.85);
-    border-radius: 10px !important;
-    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)) !important;
-    color: var(--text) !important;
-    border: 1px solid rgba(255,255,255,0.03) !important;
-    transition: box-shadow var(--transition), transform var(--transition);
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
 }
-vaadin-text-field:focus-within, vaadin-text-area:focus-within { box-shadow: 0 6px 30px rgba(212,42,59,0.08); transform: translateY(-2px); }
-vaadin-text-field::part(label), vaadin-text-area::part(label){ color:var(--muted); font-weight:600; }
+.footer-col h3 { color: var(--accent); margin-bottom: 1rem; font-size: 1.2rem; }
+.footer-col p { color: #d1d1d1; font-size: 0.95rem; line-height: 1.6; }
+.footer-social img { width: 36px; margin: 0 0.5rem; transition: transform 0.3s ease; }
+.footer-social img:hover { transform: scale(1.15); }
+.footer-copy { margin-top: 2rem; font-size: 0.85rem; color: #aaa; }
 
-/* ---------------------------
-   FOOTER
-   --------------------------- */
-.footer-section{
-    width:100%;
-    background:linear-gradient(180deg, rgba(18,18,20,0.96), rgba(12,12,14,0.98));
-    border-top:2px solid rgba(212,42,59,0.28);
-    padding: clamp(36px,6vw,64px) 8%;
-    box-sizing:border-box;
-    display:flex;flex-direction:column;align-items:center;gap:28px;
-    position:relative; overflow:visible;
-    box-shadow: inset 0 10px 40px rgba(212,42,59,0.06);
-}
-.footer-content{ width:100%; max-width:1200px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; }
-.footer-col{ flex:1; min-width:220px; }
-.footer-col h3{ color:#fff; margin-bottom:12px; font-weight:700; }
-.footer-col p{ color:var(--muted); margin:6px 0; }
-.footer-social{ display:flex; gap:12px; align-items:center; }
-.footer-social img{ width:34px; height:34px; filter:invert(1); opacity:0.86; transition: transform var(--transition), opacity var(--transition); }
-.footer-social img:hover{ transform: scale(1.15); opacity:1; }
-.footer-copy{ color:#9aa3b2; font-size:0.92rem; text-align:center; width:100%; border-top:1px solid rgba(255,255,255,0.03); padding-top:16px; margin-top:8px; }
-
-/* decorative accent line */
-.footer-section::after{
-    content:""; position:absolute; left:50%; transform:translateX(-50%); top:-6px; width:50%; height:3px; border-radius:999px;
-    background: linear-gradient(90deg, rgba(212,42,59,0.8), rgba(255,58,134,0.6)); opacity:0.12; filter:blur(8px);
-}
-
-/* ---------------------------
-   REVEAL / ANIMATIONS HELPERS
-   --------------------------- */
-/* small generic keyframes */
-@keyframes fadeInUp{ from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:none;} }
-@keyframes subtlePop{ from{transform:scale(.98); opacity:0} to{transform:scale(1); opacity:1} }
-
-/* .reveal is kept for compatibility — JS can add .in-view to elements */
-.reveal{ opacity:0; transform:translateY(18px); }
-.reveal.in-view{ animation: fadeInUp 900ms var(--transition) both; }
-
-/* ---------------------------
-   RESPONSIVE RULES
-   --------------------------- */
-@media (max-width:1200px){
-    .home-layout{ padding:64px 20px 100px; gap:20px; }
-    .gallery-grid{ grid-template-columns:1fr 1fr; }
-    .carousel-section{ height:clamp(300px,40vh,600px); }
-    #header{ width:94%; padding:16px 28px; }
-}
-@media (max-width:900px){
-    .home-layout{ padding:64px 16px 100px; }
-    .gallery-grid{ grid-template-columns:1fr; gap:14px; }
-    .menu-center{ display:none; }
-    #header{ top:8px; left:50%; transform:translateX(-50%); width:96%; padding:12px 18px; border-radius:12px; }
-    #header.scrolled{ width:94%; padding:10px 16px; border-radius:12px; transform:translateX(-50%) translateY(-4px) scale(0.95); }
-    .carousel-btn{ width:44px; height:44px; left:10px; right:10px; }
-    .media-section{ padding:8px; }
-}
-@media (max-width:520px){
-    .home-layout{ padding:56px 12px 120px; }
-    .hero-banner{ min-height:200px; }
-    h1{ font-size:1.6rem; }
-    .footer-section{ padding:36px 6%; }
-}
-
-/* ---------------------------
-   VAADIN PART SELECTORS (immagini)
-   --------------------------- */
-vaadin-image.hero-image::part(img),
-vaadin-image.media-content::part(img),
-vaadin-image.carousel-image::part(img),
-vaadin-image.logo-top::part(img),
-vaadin-image.gallery-item::part(img) {
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-    transition: transform 800ms var(--transition), filter 600ms var(--transition);
-}
-
-/* ---------------------------
-   LEGACY / COMPAT
-   --------------------------- */
-.menu-center jmix-horizontal-menu a, .menu-center jmix-horizontal-menu, .menu-center jmix-horizontal-menu::part { color: var(--text); }
-.preview-box, .preview-container, .card, .about-card { backface-visibility: hidden; }
-
-/* Navbar base: visibile, rossa come il bordo del footer */
-#header {
+/* --- NAVBAR JMIX / HEADER --- */
+.jmix-main-header, .v-navbar {
+    background-color: var(--bg-dark) !important;
+    color: var(--accent) !important;
+    box-shadow: 0 0 25px rgba(212,42,59,0.3);
     position: fixed;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 60px;
+    transition: all 0.3s ease;
+}
+.jmix-main-header a,
+.jmix-main-header span,
+.jmix-main-header h1,
+.jmix-main-header h2,
+.jmix-main-header h3,
+.v-navbar a,
+.v-navbar span {
+    color: var(--accent) !important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.jmix-main-header a:hover,
+.v-navbar a:hover { color: var(--accent-glow) !important; }
+
+/* --- PULSANTI JMIX / VAADIN --- */
+.v-button, .jmix-button {
+    background-color: var(--accent) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem !important;
+    font-weight: 600;
+    border: none !important;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+}
+.v-button:hover, .jmix-button:hover {
+    background-color: var(--accent-glow) !important;
+    transform: translateY(-2px);
+}
+.v-button:active, .jmix-button:active {
+    background-color: #b30000 !important;
+    transform: translateY(2px);
+}
+
+/* --- ANIMAZIONI --- */
+@keyframes fadeSlideIn {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.fade-in-section, .gallery-item {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s ease, transform 1s ease;
+    will-change: opacity, transform;
+}
+.fade-in-section.visible, .gallery-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 992px) {
+    .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .gallery-item { height: 320px; }
+    .carousel-section { width: 95%; height: 360px; }
+}
+@media (max-width: 900px) {
+    .jmix-main-header, .v-navbar {
+        flex-direction: column;
+        text-align: center;
+        padding: 16px 24px;
+    }
+}
+@media (max-width: 768px) {
+    .hero-text h2 { font-size: 1.8rem; }
+    .home-title { font-size: 1.8rem; }
+    .about-card { padding: 1.5rem; }
+    .carousel-section { height: 340px; }
+}
+/* === NAVBAR FIXED BLACK + RED GLOW === */
+#header.jmix-main-view-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #0f1115; /* nero profondo */
+    color: #d42a3b; /* rosso principale */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    z-index: 9999;
+    box-shadow: 0 0 25px rgba(212,42,59,0.3);
+    transition: all 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Titolo / link sito */
+#applicationTitle a.jmix-main-view-application-title-base-link {
+    color: #d42a3b !important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+#applicationTitle a.jmix-main-view-application-title-base-link:hover {
+    color: #ff4455 !important;
+    text-shadow: 0 0 8px rgba(255,68,85,0.6);
+}
+
+/* Menu centrale */
+#navigation a {
+    color: #d42a3b !important;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+#navigation a:hover {
+    color: #ff4455 !important;
+    text-shadow: 0 0 8px rgba(255,68,85,0.6);
+}
+
+/* Pulsante logout */
+#logoutButton.jmix-logout-button {
+    background-color: #d42a3b !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem !important;
+    font-weight: 600;
+    border: none !important;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+}
+
+#logoutButton.jmix-logout-button:hover {
+    background-color: #ff4455 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(255,68,85,0.6);
+}
+
+#logoutButton.jmix-logout-button:active {
+    background-color: #b30000 !important;
+    transform: translateY(2px);
+}
+
+/* Menu e navbar responsive */
+@media (max-width: 900px) {
+    #header.jmix-main-view-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 16px 24px;
+    }
+    #navigation {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+}
+
+/* === FORM JMIX OTTIMIZZATO PER SITO VETRINA === */
+.form-section {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 0 auto 20px auto;
     width: 90%;
-    height: var(--header-height);
-    z-index: 100;
+    background: var(--bg-soft);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.form-section span.h4 {
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+}
+
+.form-row .v-text-field,
+.form-row .v-text-area {
+    flex: 1;
+    min-width: 280px;
+}
+
+/* === INPUT FIELD STYLE === */
+.v-text-field,
+.v-text-area,
+.jmix-text-field,
+.jmix-text-area {
+    width: 100%;
+    border: 1px solid #fff !important;
+    border-radius: 6px !important;
+    background-color: rgba(255,255,255,0.05) !important;
+    color: var(--text-light) !important;
+}
+
+
+.v-text-field input,
+.v-text-area textarea {
+    color: var(--text-light) !important;
+}
+
+/* Helper text in bianco */
+.v-input__details,
+.v-input__details .v-messages__message {
+    color: #fff !important;
+    font-size: 0.85rem !important;
+}
+
+/* Spaziatura verticale */
+.vbox, .formLayout {
+    margin-bottom: 1.5rem;
+}
+
+/* Migliore leggibilità su schermi piccoli */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+}
+/* ============================
+   FORZA: Pulsanti Jmix / Vaadin ROSSI
+   Inserire in fondo al CSS globale del progetto
+   ============================ */
+
+/* 1) Aggiorna le variabili Lumo (Vaadin) in modo globale */
+:root {
+    --lumo-primary-color: var(--accent) !important;           /* colore principale (rosso) */
+    --lumo-primary-text-color: #ffffff !important;           /* testo su primary */
+    --lumo-primary-contrast: #ffffff !important;
+    --lumo-primary-color-50pct: rgba(212,42,59,0.5) !important;
+    --lumo-button-text-color: #ffffff !important;
+}
+
+/* 2) Targetta <vaadin-button> (theme primary/contrast) e parti del componente */
+vaadin-button,
+vaadin-button[theme],
+vaadin-button[theme~="primary"],
+vaadin-button[theme~="contrast"],
+vaadin-button[theme~="primary"][theme~="small"] {
+    background: var(--accent) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1.1rem !important;
+    box-shadow: 0 6px 18px rgba(212,42,59,0.25) !important;
+}
+
+/* Vaadin usa "parts" per label/icon: forziamo anche il part label/icon */
+vaadin-button::part(label),
+vaadin-button::part(content),
+vaadin-button::part(prefix),
+vaadin-button::part(suffix) {
+    color: #fff !important;
+}
+
+/* 3) Regole per i pulsanti nativi e classi Jmix/Vaadin comuni */
+button,
+button.jmix-button,
+button.v-button,
+.v-button,
+.jmix-button,
+.jmix-logout-button,
+.v-btn,
+.c-button {
+    background: var(--accent) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1.1rem !important;
+    box-shadow: 0 6px 18px rgba(212,42,59,0.25) !important;
+}
+
+/* Hover / focus / active */
+vaadin-button:hover,
+button:hover,
+.v-button:hover,
+.jmix-button:hover,
+.v-btn:hover {
+    background: var(--accent-glow) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(255,68,85,0.28) !important;
+}
+
+vaadin-button:active,
+button:active,
+.v-button:active,
+.jmix-button:active {
+    background: #b30000 !important;
+    transform: translateY(1px);
+    box-shadow: none !important;
+}
+
+/* 4) Stilizza i bottoni nei dialog (assicurati che anche questi vengano catturati) */
+vaadin-dialog ::slotted(vaadin-button),
+vaadin-dialog ::slotted(button),
+.v-dialog-button,
+.jmix-dialog-button {
+    background: var(--accent) !important;
+    color: #fff !important;
+}
+
+/* 5) Disabilitati */
+vaadin-button[disabled],
+button[disabled],
+.v-button[disabled],
+.jmix-button[disabled] {
+    background: #444 !important;
+    color: #999 !important;
+    box-shadow: none !important;
+    opacity: 0.85 !important;
+    cursor: not-allowed !important;
+}
+
+/* 6) Per pulsanti che dipendono da variabili Lumo aggiuntive (fallback) */
+:root {
+    --lumo-primary-text-color-60pct: rgba(255,255,255,0.6) !important;
+}
+
+/* IMPORTANT: forza priorità massima con un selettore molto specifico se serve */
+html body vaadin-button[theme~="primary"],
+html body button.jmix-button,
+html body .jmix-logout-button {
+    background: var(--accent) !important;
+}
+/* === UPLOADERS: titoli rossi / drop-label bianco === */
+
+/* namespace del tema */
+:root {
+    --uploader-bg: rgba(255,255,255,0.02);
+}
+
+/* contenitore principale degli uploaders */
+.uploader-section {
+    border: 2px solid #aaa;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 0 auto 15px auto;
+    background: transparent;
+}
+
+/* Titoli interni dell'area uploader: usa lo stesso rosso accent */
+.uploader-section .h5,
+.uploader-section .h6,
+.uploader-section span.h5,
+.uploader-section span.h6 {
+    color: var(--accent) !important;
+}
+
+/* Etichette accanto agli upload (es. "Foto 1") */
+.uploader-section hbox > span.h6,
+.uploader-section hbox span[width] {
+    color: var(--accent) !important;
+    font-weight: 600;
+}
+
+/* Stile generale del componente vaadin-upload (container) */
+.uploader-section vaadin-upload,
+.uploader-section .custom-upload {
+    display: inline-block;
+    width: auto;
+    min-width: 240px;
+    max-width: 100%;
+    background: var(--uploader-bg) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    border-radius: 8px;
+    padding: 8px;
+    box-sizing: border-box;
+    color: #fff !important;
+}
+
+/* Forza il colore del testo che è nello slot "drop-label".
+   Vaadin espone ::part(drop-label) in molte versioni, usiamo anche ::slotted fallback. */
+.uploader-section vaadin-upload::part(drop-label),
+.uploader-section vaadin-upload::part(drop-label) * {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+/* Fallback (se il browser/vaadin utilizza slot) */
+.uploader-section vaadin-upload ::slotted([slot="drop-label"]) {
+    color: #ffffff !important;
+}
+
+/* Altri parti comunemente esposte dall'upload: label/button */
+.uploader-section vaadin-upload::part(label),
+.uploader-section vaadin-upload::part(primary-button),
+.uploader-section vaadin-upload::part(secondary-button),
+.uploader-section vaadin-upload::part(browse-button) {
+    color: #ffffff !important;
+}
+
+/* Assicuriamoci che eventuali span interni generati dagli upload abbiano testo leggibile */
+.uploader-section vaadin-upload span,
+.uploader-section vaadin-upload div {
+    color: #fff !important;
+}
+
+/* Hover/active sul container upload per contrasto */
+.uploader-section vaadin-upload:hover,
+.uploader-section .custom-upload:hover {
+    border-color: rgba(212,42,59,0.45) !important;
+    box-shadow: 0 6px 18px rgba(212,42,59,0.06);
+}
+
+/* Mobile: allineamento e spacing */
+@media (max-width: 768px) {
+    .uploader-section hbox {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .uploader-section span.h6 { width: 100% !important; }
+}
+
+/* === SEZIONE NEWSLETTER - VERSIONE BANNER ORIZZONTALE === */
+
+.newsletter-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    margin: 60px auto;
+    padding: 0;
+}
+
+.newsletter-content {
+    width: 70%;
+    background: linear-gradient(90deg, rgba(212,42,59,0.15) 0%, rgba(212,42,59,0.05) 100%);
+    border: 2px solid var(--accent);
     border-radius: 16px;
-    background: linear-gradient(180deg, rgba(212,42,59,0.95), rgba(140,20,32,0.95));
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 0 40px rgba(212,42,59,0.28);
-    backdrop-filter: blur(12px);
-    transition: all 3s cubic-bezier(.16,.84,.29,1); /* 👈 transizione 3 secondi */
+    padding: 25px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    box-shadow: 0 6px 20px rgba(212,42,59,0.15);
+    animation: fadeIn 1s ease;
 }
 
-/* Navbar compatta quando si scrolla */
-#header.scrolled {
-    transform: translateX(-50%) translateY(-6px) scale(0.92);
-    opacity: 0.9;
-    border-radius: 26px;
-    box-shadow: 0 0 60px rgba(212,42,59,0.5);
-}
-@keyframes glow {
-    0%, 100% { box-shadow: 0 0 40px rgba(212,42,59,0.28); }
-    50% { box-shadow: 0 0 80px rgba(212,42,59,0.5); }
+/* Icona a sinistra */
+.newsletter-icon {
+    font-size: 2.5rem;
+    color: var(--accent);
+    flex-shrink: 0;
 }
 
-#header.scrolled {
-    animation: glow 3s ease-in-out infinite alternate;
+/* Testo centrale */
+.newsletter-text {
+    flex-grow: 1;
+    text-align: left;
 }
+
+.newsletter-text h3 {
+    color: var(--accent);
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+}
+
+.newsletter-text p {
+    color: var(--text-light);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Form a destra */
+.newsletter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.newsletter-input {
+    min-width: 250px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    font-size: 1rem;
+    color: #fff;
+    background: rgba(0,0,0,0.25);
+}
+.newsletter-input::placeholder {
+    color: #bbb;
+}
+
+.newsletter-button {
+    background-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.newsletter-button:hover {
+    background-color: var(--accent-glow);
+    transform: translateY(-2px);
+}
+.newsletter-button:active {
+    transform: translateY(1px);
+}
+
+/* RESPONSIVE: colonna su mobile */
+@media (max-width: 900px) {
+    .newsletter-content {
+        flex-direction: column;
+        width: 90%;
+        text-align: center;
+        gap: 20px;
+        padding: 25px;
+    }
+
+    .newsletter-text {
+        text-align: center;
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .newsletter-input,
+    .newsletter-button {
+        width: 100%;
+    }
+}
+/* Stile helper text per tutti i componenti che usano lo slot "helper" */
+/* Applica colore bianco a tutti gli helper text dentro vaadin-text-area */
+vaadin-text-area::part(helper-text) {
+    padding-left:1%;
+    color: var(--accent)
+}
+
+/* fallback: caso in cui l'helper sia un elemento slottato */
+vaadin-text-area ::slotted([slot="helper"]) {
+    padding-left:1%;
+    color: var(--accent)
+}
+vaadin-text-field::part(helper-text) {
+    padding-left:1%;
+    color: var(--accent)
+}
+
+/* fallback: caso in cui l'helper sia un elemento slottato */
+vaadin-text-field ::slotted([slot="helper"]) {
+    padding-left:1%;
+    color: var(--accent)
+}
+vaadin-context-menu-item::part(content),
+vaadin-menu-bar-item::part(content),
+.horizontal-menu-item::part(content) {
+    color: #aaa !important;
+}
+
+
+

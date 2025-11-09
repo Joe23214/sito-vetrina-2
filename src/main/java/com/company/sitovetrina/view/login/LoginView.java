@@ -8,9 +8,11 @@ import com.vaadin.flow.i18n.LocaleChangeEvent;
 import com.vaadin.flow.i18n.LocaleChangeObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import io.jmix.core.CoreProperties;
 import io.jmix.core.MessageTools;
 import io.jmix.core.security.AccessDeniedException;
+import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.component.loginform.JmixLoginForm;
 import io.jmix.flowui.kit.component.ComponentUtils;
@@ -31,14 +33,15 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-@Route(value = "login")
+@Route("login")
+@AnonymousAllowed
 @ViewController(id = "LoginView")
 @ViewDescriptor(path = "login-view.xml")
 public class LoginView extends StandardView implements LocaleChangeObserver {
 
     private static final Logger log = LoggerFactory.getLogger(LoginView.class);
-
+    @Autowired
+    private CurrentAuthentication currentAuthentication;
     @Autowired
     private CoreProperties coreProperties;
 

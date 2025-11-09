@@ -2,15 +2,20 @@ package com.company.sitovetrina.view.home;
 
 import com.company.sitovetrina.entity.Configsitovetrina;
 import com.company.sitovetrina.view.main.MainView;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import io.jmix.core.DataManager;
+import io.jmix.core.security.CurrentAuthentication;
+import io.jmix.flowui.Notifications;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +42,8 @@ public class Home extends StandardView {
     @ViewComponent
     private Image foto3;
     @ViewComponent
+    private Image foto4;
+    @ViewComponent
     private Image logo;
     @ViewComponent
     private Div aboutText;
@@ -58,25 +65,61 @@ public class Home extends StandardView {
     private H3 aboutTitle;
     @ViewComponent
     private Div descrText;
+    @Autowired
+    private Notifications notifications;
+    @ViewComponent
+    private TextField newsletterEmail;
+    @ViewComponent
+    private Button newsletterButton;
+    @Autowired
+    private CurrentAuthentication currentAuthentication;
+    @ViewComponent
+    private H3 aboutTitle2;
+    @ViewComponent
+    private Div aboutText2;
 
+    @Subscribe("newsletterButton")
+    public void onNewsletterButtonClick(ClickEvent<Button> event) {
+        String email = newsletterEmail.getValue();
+
+        if (email == null || email.isBlank()) {
+            notifications.create("Inserisci una email valida!")
+                    .withType(Notifications.Type.WARNING)
+                    .show();
+            return;
+        }
+
+        // simuliamo l’iscrizione
+        notifications.create("Adesso sei iscritta/o alla newsletter!")
+                .withType(Notifications.Type.SUCCESS)
+                .show();
+
+        newsletterEmail.clear();
+    }
     @Subscribe
     public void onInit(InitEvent event) {
-        initNavbarScrollEffect();
-        Optional<Configsitovetrina> cfgOpt = dataManager.load(Configsitovetrina.class).id(1).optional();
+        Optional<Configsitovetrina> cfgOpt = dataManager.load(Configsitovetrina.class)
+                .all()
+                .optional();
+
         cfgOpt.ifPresent(cfg -> {
             if (cfg.getAboutTesto() != null) {
                 aboutTitle.setText(cfg.getAboutTitolo());
                 aboutText.setText(cfg.getAboutTesto());
                 homeTitle.setText(cfg.getNomeSito());
                 descrText.setText(cfg.getDescrizioneSito());
+                aboutTitle2.setText(cfg.getAboutTitolo2());
+                aboutText2.setText(cfg.getAboutTesto2());
             }
         });
+
 
         // immagini statiche
         setStreamResourceIfExists(heroImage, "hero-new");
         setStreamResourceIfExists(foto1, "foto1-new");
         setStreamResourceIfExists(foto2, "foto2-new");
         setStreamResourceIfExists(foto3, "foto3-new");
+        setStreamResourceIfExists(foto4, "foto4-new");
         setStreamResourceIfExists(logo, "logo-new");
         setStreamResourceIfExists(carouselFoto1, "fotocarosello1-new");
         setStreamResourceIfExists(carouselFoto2, "fotocarosello2-new");
@@ -177,7 +220,12 @@ public class Home extends StandardView {
     public void onBeforeShow(BeforeShowEvent event) {
         Configsitovetrina config = dataManager.load(Configsitovetrina.class).id(1).optional().orElse(null);
         if (config == null) return;
+        boolean loggedIn = currentAuthentication.getUser().getAuthorities().stream()
+                .noneMatch(auth -> "anonymous-role".equals(auth.getAuthority()));
 
+
+
+        // --- POPOLAMENTO FOOTER ---
         getElement().executeJs("""
         const nome = $0;
         const ragione = $1;
@@ -205,69 +253,101 @@ public class Home extends StandardView {
                 config.getLinkInsta(),
                 config.getLinkTikTok()
         );
+
+        // --- CAROSELLO CINEMATICO ---
         getElement().executeJs("""
         const carousel = document.querySelector('.carousel');
+        if (!carousel) return;
+
         const slides = Array.from(carousel.querySelectorAll('.carousel-image'));
-        const nextBtn = document.getElementById('nextBtn');
-        const prevBtn = document.getElementById('prevBtn');
+        if (slides.length === 0) return;
+
         let index = 0;
         let timer = null;
         let isPaused = false;
-        let startX = 0;
-        let diffX = 0;
 
-        // Creazione indicatori dinamici
-        const indicators = document.createElement('div');
-        indicators.className = 'carousel-indicators';
+        // --- Stili di base ---
+        slides.forEach(s => {
+            s.style.position = 'absolute';
+            s.style.top = '0';
+            s.style.left = '0';
+            s.style.width = '100%';
+            s.style.height = '100%';
+            s.style.objectFit = 'cover';
+            s.style.opacity = '0';
+            s.style.transition = 'opacity 1.2s ease';
+            s.style.zIndex = '0';
+        });
+
+        // --- Creazione indicatori ---
+        const dots = document.createElement('div');
+        dots.className = 'carousel-dots';
         slides.forEach((_, i) => {
             const dot = document.createElement('span');
             dot.className = 'carousel-dot';
-            dot.addEventListener('click', () => goToSlide(i));
-            indicators.appendChild(dot);
+            dot.addEventListener('click', () => goTo(i));
+            dots.appendChild(dot);
         });
-        carousel.appendChild(indicators);
+        carousel.appendChild(dots);
 
-        function show(i) {
-            slides.forEach((img, n) => {
-                img.classList.remove('active');
-                img.style.zIndex = n === i ? 1 : 0;
-            });
-            const current = slides[i];
-            current.classList.add('active');
-            // Transizione cinematica (leggero parallax)
+        // --- Pulsanti freccia ---
+        const left = document.createElement('div');
+        const right = document.createElement('div');
+        left.className = 'carousel-btn left';
+        right.className = 'carousel-btn right';
+        left.innerHTML = '❮';
+        right.innerHTML = '❯';
+        left.onclick = prev;
+        right.onclick = next;
+        carousel.appendChild(left);
+        carousel.appendChild(right);
+
+        // --- Effetto di transizione cinematico ---
+        function cinematicShow(current, next) {
+            if (!current || !next) return;
             current.animate([
-                { transform: 'scale(1.04) translateY(12px)', opacity: 0 },
-                { transform: 'scale(1.0) translateY(0)', opacity: 1 }
-            ], { duration: 900, easing: 'cubic-bezier(.16,.84,.29,1)', fill: 'forwards' });
+                { transform: 'scale(1) translateY(0px)', opacity: 1 },
+                { transform: 'scale(1.1) translateY(30px)', opacity: 0 }
+            ], { duration: 1200, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
 
-            // Aggiorna indicatori
-            indicators.querySelectorAll('.carousel-dot').forEach((d, n) =>
+            next.animate([
+                { transform: 'scale(0.95) translateY(-20px)', opacity: 0 },
+                { transform: 'scale(1) translateY(0px)', opacity: 1 }
+            ], { duration: 1200, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+        }
+
+        // --- Mostra slide ---
+        function show(i) {
+            const prevSlide = slides[index];
+            const nextSlide = slides[i];
+            slides.forEach(s => s.style.zIndex = '0');
+            prevSlide.style.zIndex = '1';
+            nextSlide.style.zIndex = '2';
+            cinematicShow(prevSlide, nextSlide);
+            slides.forEach((s, n) => s.style.opacity = n === i ? '1' : '0');
+            dots.querySelectorAll('.carousel-dot').forEach((d, n) =>
                 d.classList.toggle('active', n === i)
             );
         }
 
-        function goToSlide(i) {
+        function goTo(i) {
             index = (i + slides.length) % slides.length;
             show(index);
         }
+        function next() { goTo(index + 1); }
+        function prev() { goTo(index - 1); }
 
-        function next() { goToSlide(index + 1); }
-        function prev() { goToSlide(index - 1); }
-
+        // --- AutoPlay ---
         function startAuto() {
             if (timer) clearInterval(timer);
-            timer = setInterval(() => { if (!isPaused) next(); }, 6000);
+            timer = setInterval(() => { if (!isPaused) next(); }, 3000);
         }
 
-        // Controlli manuali
-        nextBtn.onclick = next;
-        prevBtn.onclick = prev;
-
-        // Hover: pausa autoplay
         carousel.addEventListener('mouseenter', () => isPaused = true);
         carousel.addEventListener('mouseleave', () => isPaused = false);
 
-        // Swipe mobile
+        // --- Swipe mobile ---
+        let startX = 0, diffX = 0;
         carousel.addEventListener('touchstart', e => startX = e.touches[0].clientX);
         carousel.addEventListener('touchmove', e => diffX = e.touches[0].clientX - startX);
         carousel.addEventListener('touchend', () => {
@@ -275,57 +355,34 @@ public class Home extends StandardView {
             diffX = 0;
         });
 
-        // Navigazione tastiera
+        // --- Tastiera ---
         window.addEventListener('keydown', e => {
             if (e.key === 'ArrowRight') next();
             if (e.key === 'ArrowLeft') prev();
         });
 
-        // Avvio
-        show(index);
+        // --- Avvio ---
+        slides[0].style.opacity = '1';
+        slides[0].style.zIndex = '2';
+        dots.firstChild.classList.add('active');
         startAuto();
     """);
-    }
 
-    private void initNavbarScrollEffect() {
-        getElement().executeJs("""
-        const header = document.getElementById('header');
-        if (!header) return;
-
-        // La navbar è visibile fin dall'inizio
-        header.style.opacity = '1';
-        header.classList.remove('scrolled');
-
-        let lastScrollY = 0;
-        let ticking = false;
-
-        function updateNavbar() {
-            const currentY = window.scrollY || window.pageYOffset;
-            const goingDown = currentY > lastScrollY;
-
-            if (currentY > 80 && goingDown) {
-                // Scorrimento verso il basso: compatta la navbar
-                header.classList.add('scrolled');
-            } else if (currentY <= 20) {
-                // Torna in cima: ripristina navbar grande
-                header.classList.remove('scrolled');
-            }
-
-            lastScrollY = currentY;
-            ticking = false;
-        }
-
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(updateNavbar);
-                ticking = true;
+    getElement().executeJs("""
+    // --- ANIMAZIONE FADE-IN ON SCROLL ---
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
             }
         });
-    """);
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in-section, .gallery-item').forEach(el => {
+        observer.observe(el);
+    });
+""");
+
     }
-
-
-
-
-
 }
