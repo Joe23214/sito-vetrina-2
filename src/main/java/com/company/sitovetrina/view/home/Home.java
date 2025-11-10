@@ -1,6 +1,7 @@
 package com.company.sitovetrina.view.home;
 
 import com.company.sitovetrina.entity.Configsitovetrina;
+import com.company.sitovetrina.entity.Newsletter;
 import com.company.sitovetrina.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
@@ -78,9 +79,9 @@ public class Home extends StandardView {
     @ViewComponent
     private Div aboutText2;
 
-    @Subscribe("newsletterButton")
-    public void onNewsletterButtonClick(ClickEvent<Button> event) {
-        String email = newsletterEmail.getValue();
+   /* @Subscribe("newsletterButton")
+    public void onNewsletterButtonClick(ClickEvent<Button> event) {*/
+       /* String email = newsletterEmail.getValue();
 
         if (email == null || email.isBlank()) {
             notifications.create("Inserisci una email valida!")
@@ -94,8 +95,53 @@ public class Home extends StandardView {
                 .withType(Notifications.Type.SUCCESS)
                 .show();
 
-        newsletterEmail.clear();
-    }
+        newsletterEmail.clear();*/
+        @Subscribe("newsletterButton")
+        public void onNewsletterButtonClick(ClickEvent<Button> event) {
+            String email = newsletterEmail.getValue();
+
+            // --- Verifica che sia un indirizzo email valido ---
+            if (email == null || email.isBlank()) {
+                notifications.create("Inserisci una email!")
+                        .withType(Notifications.Type.WARNING)
+                        .show();
+                return;
+            }
+
+            // Regex base per email
+            if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                notifications.create("Formato email non valido!")
+                        .withType(Notifications.Type.WARNING)
+                        .show();
+                return;
+            }
+
+            // --- Controllo se già presente ---
+            Optional<Newsletter> existing = dataManager.load(Newsletter.class)
+                    .query("select n from Newsletter n where n.email = :email")
+                    .parameter("email", email)
+                    .optional();
+
+            if (existing.isPresent()) {
+                notifications.create("Questa email è già iscritta alla newsletter.")
+                        .withType(Notifications.Type.WARNING)
+                        .show();
+                return;
+            }
+
+            // --- Salvataggio nuova iscrizione ---
+            Newsletter n = dataManager.create(Newsletter.class);
+            n.setEmail(email);
+            dataManager.save(n);
+
+            notifications.create("Iscrizione completata con successo!")
+                    .withType(Notifications.Type.SUCCESS)
+                    .show();
+
+            newsletterEmail.clear();
+        }
+
+
     @Subscribe
     public void onInit(InitEvent event) {
         Optional<Configsitovetrina> cfgOpt = dataManager.load(Configsitovetrina.class)

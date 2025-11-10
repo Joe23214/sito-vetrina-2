@@ -111,7 +111,7 @@ a { text-decoration: none; color: inherit; }
     width: 100%;
 }
 .media-content {
-    max-width: 600px;
+    max-width: 1000px;
     width: 80%;
     border-radius: 16px;
     box-shadow: 0 8px 40px rgba(0,0,0,0.4);
@@ -828,5 +828,7 @@ vaadin-menu-bar-item::part(content),
     color: #aaa !important;
 }
 
-
-
+.bg-dark{
+    background-color: var(--bg-soft) !important;
+    color: var(--accent) !important;
+}

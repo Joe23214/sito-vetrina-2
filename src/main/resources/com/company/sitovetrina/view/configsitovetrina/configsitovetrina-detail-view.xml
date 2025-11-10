@@ -35,8 +35,12 @@
             <vbox classNames="form-section">
                 <span text="📘 Sezione About Us" classNames="h4"/>
                 <hbox classNames="form-row">
-                    <textArea id="aboutTestoField" property="aboutTesto" helperText="Descrizione About" classNames="v-text-area"/>
                     <textField id="aboutTitoloField" property="aboutTitolo" helperText="Titolo About" classNames="v-text-field"/>
+                    <textArea id="aboutTestoField" property="aboutTesto" helperText="Descrizione About" classNames="v-text-area"/>
+                </hbox>
+                <hbox classNames="form-row">
+                    <textField id="aboutTitolo2Field" property="aboutTitolo2" helperText="Titolo Sezione servizi" classNames="v-text-field"/>
+                    <textArea id="aboutTesto2Field" property="aboutTesto2" helperText="Descrizione Sezione Servizi" classNames="v-text-area"/>
                 </hbox>
             </vbox>
 
