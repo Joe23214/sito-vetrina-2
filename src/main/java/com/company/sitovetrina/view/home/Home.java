@@ -3,6 +3,7 @@ package com.company.sitovetrina.view.home;
 import com.company.sitovetrina.entity.Configsitovetrina;
 import com.company.sitovetrina.entity.Newsletter;
 import com.company.sitovetrina.view.main.MainView;
+import com.company.sitovetrina.view.servizi.Servizi;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
@@ -21,6 +22,8 @@ import io.jmix.email.EmailInfo;
 import io.jmix.email.EmailInfoBuilder;
 import io.jmix.email.Emailer;
 import io.jmix.flowui.Notifications;
+import io.jmix.flowui.ViewNavigators;
+import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,6 +80,7 @@ public class Home extends StandardView {
     private TextField newsletterEmail;
     @ViewComponent
     private Button newsletterButton;
+
     @Autowired
     private CurrentAuthentication currentAuthentication;
     @ViewComponent
@@ -85,6 +89,15 @@ public class Home extends StandardView {
     private Div aboutText2;
     @Autowired
     private Emailer emailer;
+    @Autowired
+    private ViewNavigators viewNavigators;
+
+    @Subscribe(id = "serviceButton", subject = "clickListener")
+    public void onServiceButtonClick(final ClickEvent<JmixButton> event) {
+        viewNavigators.view(this, Servizi.class).navigate();
+    }
+
+
     private Optional<Path> getLogoPath() {
         Path dir = Paths.get(filesPath);
         String[] extensions = {".png", ".jpg", ".jpeg", ".gif", ".webp"};

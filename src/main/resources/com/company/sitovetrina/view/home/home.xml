@@ -61,7 +61,7 @@
             <div id="aboutCard2" classNames="about-card fade-in-section">
                 <h3 id="aboutTitle2"></h3>
                 <div id="aboutText2" classNames="about-text"></div>
-                <button alignSelf="CENTER" text="msg://Vai!" classNames="newsletter-button"></button>
+                <button id="serviceButton" alignSelf="CENTER" text="msg://Vai!" classNames="newsletter-button"></button>
             </div>
             <!-- Carosello immagini finali -->
             <div id="carouselSection" classNames="carousel-section fade-in-section">

@@ -18,11 +18,17 @@ import io.jmix.flowui.Notifications;
 import io.jmix.flowui.component.upload.FileStorageUploadField;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @Route(value = "newsletter-admin", layout = MainView.class)
 @ViewController("NewsletterAdminView")
@@ -48,6 +54,47 @@ public class NewsletterAdminView extends StandardView {
     private FileStorageUploadField attachmentField;
     @ViewComponent
     private Button sendButton;
+
+    @Value("${site.files.path}")
+    private String filesPath;
+    private Optional<Path> getLogoPath() {
+        Path dir = Paths.get(filesPath);
+        String[] extensions = {".png", ".jpg", ".jpeg", ".gif", ".webp"};
+
+        for (String suffix : new String[]{"-new", "-old", ""}) {
+            for (String ext : extensions) {
+                Path p = dir.resolve("logo" + suffix + ext);
+                if (Files.exists(p)) {
+                    return Optional.of(p);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    private String getLogoBase64() {
+        try {
+            Optional<Path> logoPathOpt = getLogoPath();
+            if (logoPathOpt.isEmpty()) {
+                return ""; // nessun logo trovato
+            }
+            Path logoPath = logoPathOpt.get();
+            byte[] bytes = Files.readAllBytes(logoPath);
+            String base64 = Base64.getEncoder().encodeToString(bytes);
+            String extension = "";
+
+            String name = logoPath.getFileName().toString();
+            int dot = name.lastIndexOf('.');
+            if (dot > 0) {
+                extension = name.substring(dot + 1);
+            }
+
+            return "data:image/" + extension + ";base64," + base64;
+        } catch (IOException e) {
+            System.err.println("Errore lettura logo: " + e.getMessage());
+            return "";
+        }
+    }
 
     @Subscribe("sendButton")
     public void onSendButtonClick(ClickEvent<Button> event) {
@@ -119,6 +166,7 @@ public class NewsletterAdminView extends StandardView {
     }
 
     private String generateEmailHtml(String title, String body) {
+        String logoBase64 = getLogoBase64();
         return """
     <html>
     <body style="margin:0; padding:0; background-color:#f3f4f6; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -129,7 +177,7 @@ public class NewsletterAdminView extends StandardView {
                         <tr>
                             <td align="center" style="padding:40px 20px 10px 20px;">
                                 <!-- LOGO -->
-                                <img src="https://www.tuosito.it/images/logo.png" alt="Logo" width="160" style="display:block; margin:auto; border:0;">
+                                 <img src="%s" alt="Logo" width="160" style="display:block; margin:auto; border:0;">
                             </td>
                         </tr>
                         <tr>
@@ -154,6 +202,11 @@ public class NewsletterAdminView extends StandardView {
                 </td>
             </tr>
         </table>
+         <p style="font-size:13px; color:#999999; text-align:center; margin-top:30px;">
+            Se non vuoi più ricevere queste email,
+            <a href="https://www.tuosito.it/unsubscribe?email=%s"
+               style="color:#a48b5f; text-decoration:none;">clicca qui per disiscriverti</a>.
+        </p>
     </body>
     </html>
     """.formatted(title, body);

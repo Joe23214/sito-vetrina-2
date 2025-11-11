@@ -16,7 +16,12 @@ import io.jmix.email.Emailer;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.nio.file.*;
+import java.util.Base64;
+import java.util.Optional;
+import java.io.IOException;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +46,46 @@ public class UnsubscribeView extends StandardView implements BeforeEnterObserver
     private Button confirmButton;
 
     private String email;
+    @Value("${site.files.path}")
+    private String filesPath;
+    private Optional<Path> getLogoPath() {
+        Path dir = Paths.get(filesPath);
+        String[] extensions = {".png", ".jpg", ".jpeg", ".gif", ".webp"};
+
+        for (String suffix : new String[]{"-new", "-old", ""}) {
+            for (String ext : extensions) {
+                Path p = dir.resolve("logo" + suffix + ext);
+                if (Files.exists(p)) {
+                    return Optional.of(p);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    private String getLogoBase64() {
+        try {
+            Optional<Path> logoPathOpt = getLogoPath();
+            if (logoPathOpt.isEmpty()) {
+                return ""; // nessun logo trovato
+            }
+            Path logoPath = logoPathOpt.get();
+            byte[] bytes = Files.readAllBytes(logoPath);
+            String base64 = Base64.getEncoder().encodeToString(bytes);
+            String extension = "";
+
+            String name = logoPath.getFileName().toString();
+            int dot = name.lastIndexOf('.');
+            if (dot > 0) {
+                extension = name.substring(dot + 1);
+            }
+
+            return "data:image/" + extension + ";base64," + base64;
+        } catch (IOException e) {
+            System.err.println("Errore lettura logo: " + e.getMessage());
+            return "";
+        }
+    }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
@@ -128,6 +173,7 @@ public class UnsubscribeView extends StandardView implements BeforeEnterObserver
     }
 
     private String generateUnsubscribeEmailHtml(String email) {
+        String logoBase64 = getLogoBase64();
         return """
         <html>
         <body style="margin:0; padding:0; background-color:#f3f4f6; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -138,8 +184,7 @@ public class UnsubscribeView extends StandardView implements BeforeEnterObserver
                                style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
                             <tr>
                                 <td align="center" style="padding:40px 20px 10px 20px;">
-                                    <img src="https://www.tuosito.it/images/logo.png" alt="Logo" width="160"
-                                         style="display:block; margin:auto; border:0;">
+                                   <img src="%s" alt="Logo" width="160" style="display:block; margin:auto; border:0;">
                                 </td>
                             </tr>
                             <tr>
