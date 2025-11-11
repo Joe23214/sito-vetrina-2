@@ -2,11 +2,14 @@ package com.company.sitovetrina.view.login;
 
 import com.company.sitovetrina.view.home.Home;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.AbstractLogin.LoginEvent;
 import com.vaadin.flow.component.login.LoginI18n;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.i18n.LocaleChangeEvent;
 import com.vaadin.flow.i18n.LocaleChangeObserver;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import io.jmix.core.CoreProperties;
@@ -29,6 +32,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.function.Function;
@@ -65,10 +72,23 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
     @Autowired
     private ViewNavigators viewNavigators;
 
+   /* @Value("${site.files.path}")
+    private String filesPath;*/
+
     @Subscribe
     public void onInit(final InitEvent event) {
         initLocales();
         initDefaultCredentials();
+       /* String imagePath = "file:///" + filesPath.replace("\\", "/") + "/loginBg-new.jpeg";
+
+        // Imposta lo sfondo tramite JavaScript
+        UI.getCurrent().getPage().executeJs(
+                "document.body.style.backgroundImage = 'url(\"' + $0 + '\")';" +
+                        "document.body.style.backgroundSize = 'cover';" +
+                        "document.body.style.backgroundPosition = 'center';" +
+                        "document.body.style.backgroundRepeat = 'no-repeat';",
+                imagePath
+        );*/
     }
 
     private void initLocales() {

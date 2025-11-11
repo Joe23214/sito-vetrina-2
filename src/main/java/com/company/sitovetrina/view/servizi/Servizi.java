@@ -96,12 +96,6 @@
 
             Div cta = new Div();
             cta.addClassName("service-cta");
-            if (s.getLinkInfo() != null && !s.getLinkInfo().isBlank()) {
-                Button infoBtn = new Button("Scopri di più");
-                infoBtn.addClassName("jmix-button");
-                infoBtn.getElement().setAttribute("onclick", "window.open('" + s.getLinkInfo() + "','_blank')");
-                cta.add(infoBtn);
-            }
             card.add(cta);
 
             wrapper.add(card);

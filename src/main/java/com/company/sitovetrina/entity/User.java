@@ -27,6 +27,7 @@ public class User implements JmixUserDetails, HasTimeZone {
     @JmixGeneratedValue
     private UUID id;
 
+
     @Version
     @Column(name = "VERSION", nullable = false)
     private Integer version;

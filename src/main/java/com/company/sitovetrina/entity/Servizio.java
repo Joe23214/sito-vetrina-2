@@ -4,6 +4,7 @@ import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.Store;
 import io.jmix.data.DdlGeneration;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class Servizio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "data_creazione")
     private Date dataCreazione;
@@ -25,9 +26,6 @@ public class Servizio {
     @Column(name = "descrizione")
     @Lob
     private String descrizione;
-
-    @Column(name = "link_info")
-    private String linkInfo;
 
     @Column(name = "`sottoTitolo`", length = 150)
     private String sottoTitolo;
@@ -51,13 +49,6 @@ public class Servizio {
         this.sottoTitolo = sottoTitolo;
     }
 
-    public String getLinkInfo() {
-        return linkInfo;
-    }
-
-    public void setLinkInfo(String linkInfo) {
-        this.linkInfo = linkInfo;
-    }
 
     public String getDescrizione() {
         return descrizione;

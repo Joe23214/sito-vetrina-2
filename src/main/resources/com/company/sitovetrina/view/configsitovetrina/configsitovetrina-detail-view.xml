@@ -94,7 +94,7 @@
                     <textField id="testoFooterField" property="testoFooter" helperText="Testo Footer" classNames="v-text-field"/>
                 </hbox>
                 <hbox classNames="form-row">
-                    <textArea id="linkMaps" property="linkMaps" helperText="Link google maps" classNames="v-text-area" height="8em"/>
+                    <textArea id="linkMaps" property="linkMaps" helperText="Link google maps, per prendere il contenuto andare alla pagina maps, cliccare condividi,cliccare su incorpora una mappa e infine copiare l'html e incollarlo qui!" classNames="v-text-area" height="8em"/>
                     <textField id="linkWhatsapp" property="linkWhatsap" helperText="link whatsapp (numero internazionale senza '+', es: 393401234567)" classNames="v-text-field"/>
                 </hbox>
                 <hbox classNames="form-row">
@@ -109,7 +109,7 @@
                   css="border:2px solid #aaa; border-radius:10px; padding:20px; margin:0 auto 15px auto;">
                 <span text="🖼️ Sezione Upload Immagini e Media" classNames="h4"/>
 
-                <!-- tutto identico come prima -->
+
                 <vbox spacing="true" css="border:1px solid #ccc; border-radius:10px; padding:15px;">
                     <span text="📷 Foto Principali Home" classNames="h5"/>
 
@@ -162,6 +162,14 @@
                         <div id="previewGif" css="border:1px solid #d42a3b; color:#d42a3b; width:350px; height:250px; object-fit:contain;"/>
                     </hbox>
                 </vbox>
+
+                <!--<vbox spacing="true" css="border-radius:10px; padding:15px;">
+                    <hbox spacing="true" alignItems="CENTER">
+                        <span text="LoginBg" classNames="h6" width="150px"/>
+                        <upload id="uploadlogin" classNames="custom-upload" dropAllowed="true" autoUpload="true" maxFileSize="10485760" />
+                        <div id="previewLogin" css="border:1px solid #d42a3b; color:#d42a3b; width:350px; height:250px; object-fit:contain;"/>
+                    </hbox>
+                </vbox>-->
 
                 <!-- CAROSELLO -->
                 <vbox spacing="true" css="border:1px solid #ccc; border-radius:10px; padding:15px;">

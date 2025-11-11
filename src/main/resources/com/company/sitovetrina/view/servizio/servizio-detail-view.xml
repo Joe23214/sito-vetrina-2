@@ -24,9 +24,7 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <dateTimePicker id="dataCreazioneField" property="dataCreazione"/>
             <textArea classNames="v-text-area" id="descrizioneField" height="9.5em" property="descrizione"/>
-            <textField classNames="v-text-field" id="linkInfoField" property="linkInfo"/>
             <textField classNames="v-text-field" id="sottoTitoloField" property="sottoTitolo"/>
             <textField classNames="v-text-field" id="titoloField" property="titolo"/>
         </formLayout>

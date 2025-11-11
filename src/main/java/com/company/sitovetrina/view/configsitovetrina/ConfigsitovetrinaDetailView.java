@@ -42,6 +42,11 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
     private InstanceContainer<Configsitovetrina> configsitovetrinaDc;
     @ViewComponent private Upload uploadBanner;
     @ViewComponent private Div previewBanner;
+ /*   @ViewComponent
+    private Upload uploadlogin;
+
+    @ViewComponent
+    private Div previewLogin;*/
 
     @ViewComponent private Upload uploadFoto1;
     @ViewComponent private Upload uploadFoto2;
@@ -76,6 +81,7 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
 
     @Subscribe
     public void onInit(InitEvent event) {
+        // --- upload login background ---
         previewMap = Map.of(
                 "foto1", previewFoto1,
                 "foto2", previewFoto2,
@@ -88,6 +94,7 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
                 "fotocarosello3", previewCarosello3,
                 "hero", previewBanner   // 👈 aggiunta
         );
+      /*  previewMap.put("loginBg", previewLogin);*/
 
         uploadMap = Map.of(
                 "foto1", uploadFoto1,
@@ -101,7 +108,7 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
                 "fotocarosello3", uploadCarosello3,
                 "hero", uploadBanner    // 👈 aggiunta
         );
-
+      /*  uploadMap.put("loginBg", uploadlogin);*/
 
         uploadMap.forEach(this::setupUpload);
         List<Servizio> servizi = dataManager.load(Servizio.class).all().list();
@@ -117,6 +124,8 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
 
         previewMap.keySet().forEach(this::renderPreviewsForBase);
     }
+
+
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {

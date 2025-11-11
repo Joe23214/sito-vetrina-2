@@ -16,6 +16,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import io.jmix.core.DataManager;
 import io.jmix.core.security.CurrentAuthentication;
+import io.jmix.email.EmailAttachment;
 import io.jmix.email.EmailInfo;
 import io.jmix.email.EmailInfoBuilder;
 import io.jmix.email.Emailer;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.Optional;
 @AnonymousAllowed
 @Route(value = "home", layout = MainView.class)
@@ -83,20 +85,65 @@ public class Home extends StandardView {
     private Div aboutText2;
     @Autowired
     private Emailer emailer;
-    private String generateConfirmationEmailHtml(String email) {
+    private Optional<Path> getLogoPath() {
+        Path dir = Paths.get(filesPath);
+        String[] extensions = {".png", ".jpg", ".jpeg", ".gif", ".webp"};
+
+        for (String suffix : new String[]{"-new", "-old", ""}) {
+            for (String ext : extensions) {
+                Path p = dir.resolve("logo" + suffix + ext);
+                if (Files.exists(p)) {
+                    return Optional.of(p);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Restituisce l’immagine del logo come stringa Base64 data:image/... (per embedding inline).
+     */
+    private String getLogoBase64() {
+        try {
+            Optional<Path> logoPathOpt = getLogoPath();
+            if (logoPathOpt.isEmpty()) {
+                return ""; // nessun logo trovato
+            }
+            Path logoPath = logoPathOpt.get();
+            byte[] bytes = Files.readAllBytes(logoPath);
+            String base64 = Base64.getEncoder().encodeToString(bytes);
+            String extension = "";
+
+            String name = logoPath.getFileName().toString();
+            int dot = name.lastIndexOf('.');
+            if (dot > 0) {
+                extension = name.substring(dot + 1);
+            }
+
+            return "data:image/" + extension + ";base64," + base64;
+        } catch (IOException e) {
+            System.err.println("Errore lettura logo: " + e.getMessage());
+            return "";
+        }
+    }
+
+    /**
+     * Crea il corpo HTML dell’email, includendo il logo inline in Base64.
+     */
+    private String generateConfirmationEmailHtml(String email, String logoBase64) {
         return """
     <html>
     <body style="margin:0; padding:0; background-color:#f3f4f6; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-        <table role="presentation" cellpadding="0" cellspacing="0" width="100%%" 
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%%"
                style="background-color:#f3f4f6; padding:40px 0;">
             <tr>
                 <td align="center">
-                    <table role="presentation" cellpadding="0" cellspacing="0" width="600" 
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="600"
                            style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
                         <!-- Logo -->
                         <tr>
                             <td align="center" style="padding:40px 20px 10px 20px;">
-                                <img src="https://www.tuosito.it/images/logo.png" alt="Logo" width="160"
+                                <img src="%s" alt="Logo" width="160"
                                      style="display:block; margin:auto; border:0;">
                             </td>
                         </tr>
@@ -113,7 +160,7 @@ public class Home extends StandardView {
                             <td align="left" style="padding:0 40px 20px 40px;">
                                 <p style="font-size:16px; line-height:1.6; color:#444444;">
                                     Ciao <strong>%s</strong>,<br><br>
-                                    grazie per esserti iscritto alla nostra newsletter!  
+                                    grazie per esserti iscritto alla nostra newsletter!
                                     Da oggi riceverai in anteprima notizie, offerte esclusive e aggiornamenti dal nostro sito.
                                 </p>
                             </td>
@@ -122,7 +169,7 @@ public class Home extends StandardView {
                         <tr>
                             <td align="center" style="padding:20px 40px 40px 40px;">
                                 <a href="https://www.tuosito.it"
-                                   style="background-color:#a48b5f; color:#ffffff; text-decoration:none; 
+                                   style="background-color:#d42a3b; color:#000000; text-decoration:none;
                                           padding:12px 28px; border-radius:6px; font-weight:600; display:inline-block;">
                                     Visita il nostro sito
                                 </a>
@@ -133,7 +180,7 @@ public class Home extends StandardView {
                             <td align="center" style="padding:20px 40px 40px 40px; border-top:1px solid #e5e7eb;">
                                 <p style="font-size:13px; color:#999999; margin:0;">
                                     © 2025 <strong>Sito Vetrina</strong> · Tutti i diritti riservati<br>
-                                    <a href="https://www.tuosito.it/privacy" 
+                                    <a href="https://www.tuosito.it/privacy"
                                        style="color:#a48b5f; text-decoration:none;">Privacy Policy</a>
                                 </p>
                             </td>
@@ -142,15 +189,14 @@ public class Home extends StandardView {
                 </td>
             </tr>
         </table>
-        <!-- Link disiscrizione -->
         <p style="font-size:13px; color:#999999; text-align:center; margin-top:30px;">
-            Se non vuoi più ricevere queste email, 
-            <a href="https://www.tuosito.it/unsubscribe?email=%s" 
+            Se non vuoi più ricevere queste email,
+            <a href="https://www.tuosito.it/unsubscribe?email=%s"
                style="color:#a48b5f; text-decoration:none;">clicca qui per disiscriverti</a>.
         </p>
     </body>
     </html>
-    """.formatted(email, email);
+    """.formatted(logoBase64, email, email);
     }
 
 
@@ -193,12 +239,12 @@ public class Home extends StandardView {
 
         // --- Invio mail di conferma ---
         try {
-            String subject = "🎉 Benvenuto nella Newsletter di Sito Vetrina!";
-            String body = generateConfirmationEmailHtml(email);
+            String logoBase64 = getLogoBase64();
+            String body = generateConfirmationEmailHtml(email, logoBase64);
 
             EmailInfo confirmationEmail = EmailInfoBuilder.create()
                     .setAddresses(email)
-                    .setSubject(subject)
+                    .setSubject("🎉 Benvenuto nella Newsletter di Sito Vetrina!")
                     .setBody(body)
                     .setBodyContentType("text/html")
                     .build();
@@ -218,7 +264,6 @@ public class Home extends StandardView {
 
         newsletterEmail.clear();
     }
-
 
 
     @Subscribe

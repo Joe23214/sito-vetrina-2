@@ -1,6 +1,7 @@
 package com.company.sitovetrina.security;
 
 import com.company.sitovetrina.entity.Configsitovetrina;
+import com.company.sitovetrina.entity.Newsletter;
 import com.company.sitovetrina.entity.Servizio;
 import io.jmix.security.model.EntityPolicyAction;
 import io.jmix.security.role.annotation.EntityPolicy;
@@ -23,4 +24,7 @@ public interface AnonymousRole {
 
     @EntityPolicy(entityClass = Servizio.class, actions = EntityPolicyAction.READ)
     void servizio();
+
+    @EntityPolicy(entityClass = Newsletter.class, actions = {EntityPolicyAction.CREATE, EntityPolicyAction.READ})
+    void newsletter();
 }

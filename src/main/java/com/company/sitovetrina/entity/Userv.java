@@ -4,6 +4,7 @@ import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.Store;
 import io.jmix.data.DdlGeneration;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
 
@@ -21,6 +22,7 @@ public class Userv {
     @Column(name = "cognome", length = 100)
     private String cognome;
 
+    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "data_creazione")
     private Date dataCreazione;
