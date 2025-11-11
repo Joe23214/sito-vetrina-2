@@ -17,19 +17,19 @@
         <dataLoadCoordinator auto="true"/>
     </facets>
     <layout>
-        <formLayout id="form" dataContainer="userDc">
-            <textField id="usernameField" property="username" readOnly="true"/>
+        <formLayout classNames="form-section" id="form" dataContainer="userDc">
+            <textField classNames="v-text-field"  id="usernameField" property="username" readOnly="true"/>
             <passwordField id="passwordField"
                            label="msg://com.company.sitovetrina.entity/User.password"
                            required="true"
                            visible="false"/>
-            <passwordField id="confirmPasswordField"
+            <passwordField classNames="v-text-field" id="confirmPasswordField"
                            label="msg://confirmPassword"
                            required="true"
                            visible="false"/>
-            <textField id="firstNameField" property="firstName"/>
-            <textField id="lastNameField" property="lastName"/>
-            <textField id="emailField" property="email"/>
+            <textField classNames="v-text-field" id="firstNameField" property="firstName"/>
+            <textField classNames="v-text-field" id="lastNameField" property="lastName"/>
+            <textField classNames="v-text-field" id="emailField" property="email"/>
             <comboBox id="timeZoneField" property="timeZoneId" clearButtonVisible="true"/>
             <checkbox id="activeField" property="active"/>
         </formLayout>

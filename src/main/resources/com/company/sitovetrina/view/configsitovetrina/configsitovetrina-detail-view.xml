@@ -93,6 +93,13 @@
                     <textField id="linkTikTokField" property="linkTikTok" helperText="Link TikTok" classNames="v-text-field"/>
                     <textField id="testoFooterField" property="testoFooter" helperText="Testo Footer" classNames="v-text-field"/>
                 </hbox>
+                <hbox classNames="form-row">
+                    <textArea id="linkMaps" property="linkMaps" helperText="Link google maps" classNames="v-text-area" height="8em"/>
+                    <textField id="linkWhatsapp" property="linkWhatsap" helperText="link whatsapp (numero internazionale senza '+', es: 393401234567)" classNames="v-text-field"/>
+                </hbox>
+                <hbox classNames="form-row">
+                    <textArea id="orariFIeld" property="orari" helperText="Inserisci orari" placeholder="LUNEDì: 09-00 13:00 15:00-21:00 (andare a capo) ecc. " classNames="v-text-area" height="8em"/>
+                </hbox>
             </vbox>
 
             <!-- =================================================== -->
@@ -177,6 +184,11 @@
                         <div id="previewCarosello3" css="border:1px solid #d42a3b; color:#d42a3b; width:350px; height:250px; object-fit:contain;"/>
                     </hbox>
                 </vbox>
+                //servizi
+                <vbox spacing="true" id="serviziUploaderBox" classNames="uploader-section mb-xl">
+                    <span text="🧩 Allegati Servizi" classNames="h4"/>
+                </vbox>
+
             </vbox>
 
         </formLayout>

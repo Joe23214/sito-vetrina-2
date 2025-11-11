@@ -1,6 +1,5 @@
 package com.company.sitovetrina.view.newsletteradmin;
 
-
 import com.company.sitovetrina.entity.Newsletter;
 import com.company.sitovetrina.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
@@ -10,13 +9,19 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.DataManager;
 import io.jmix.core.FileRef;
+import io.jmix.core.FileStorageLocator;
+import io.jmix.email.EmailAttachment;
 import io.jmix.email.EmailInfo;
+import io.jmix.email.EmailInfoBuilder;
 import io.jmix.email.Emailer;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.component.upload.FileStorageUploadField;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 @Route(value = "newsletter-admin", layout = MainView.class)
@@ -30,6 +35,8 @@ public class NewsletterAdminView extends StandardView {
     private Emailer emailer;
     @Autowired
     private Notifications notifications;
+    @Autowired
+    private FileStorageLocator fileStorageLocator;
 
     @ViewComponent
     private TextField subjectField;
@@ -63,19 +70,35 @@ public class NewsletterAdminView extends StandardView {
             return;
         }
 
-        FileRef attachment = attachmentField.getValue();
+        FileRef attachmentRef = attachmentField.getValue();
         int success = 0;
 
         for (Newsletter n : iscritti) {
             try {
-                // ✅ Costruzione manuale di EmailInfo (in Jmix 2.6 non c’è builder)
-                EmailInfo emailInfo = new EmailInfo(
-                        n.getEmail(),           // destinatario
-                        subject,                // oggetto
-                        "<h2>" + title + "</h2><p>" + body + "</p>",  // corpo HTML
-                        "text/html",            // tipo contenuto
-                        attachment              // allegato opzionale
-                );
+                String htmlBody = generateEmailHtml(title, body);
+                List<EmailAttachment> attachments = new ArrayList<>();
+
+                if (attachmentRef != null) {
+                    try (InputStream input = fileStorageLocator.getDefault().openStream(attachmentRef)) {
+                        byte[] data = input.readAllBytes();
+                        attachments.add(new EmailAttachment(
+                                data,
+                                attachmentRef.getFileName(),
+                                "application/octet-stream"
+                        ));
+                    } catch (IOException e) {
+                        System.err.println("Errore lettura allegato: " + e.getMessage());
+                    }
+                }
+
+                // ✅ Usa EmailInfoBuilder (ufficiale in Jmix 2.6)
+                EmailInfo emailInfo = EmailInfoBuilder.create()
+                        .setAddresses(n.getEmail())
+                        .setSubject(subject)
+                        .setBody(htmlBody)
+                        .setBodyContentType("text/html")
+                        .setAttachments(attachments)
+                        .build();
 
                 emailer.sendEmail(emailInfo);
                 success++;
@@ -92,6 +115,48 @@ public class NewsletterAdminView extends StandardView {
         subjectField.clear();
         titleField.clear();
         bodyField.clear();
-        attachmentField.clear(); // ✅ non clearFileList()
+        attachmentField.clear();
     }
+
+    private String generateEmailHtml(String title, String body) {
+        return """
+    <html>
+    <body style="margin:0; padding:0; background-color:#f3f4f6; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%%" style="background-color:#f3f4f6; padding:40px 0;">
+            <tr>
+                <td align="center">
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                        <tr>
+                            <td align="center" style="padding:40px 20px 10px 20px;">
+                                <!-- LOGO -->
+                                <img src="https://www.tuosito.it/images/logo.png" alt="Logo" width="160" style="display:block; margin:auto; border:0;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="padding:0 40px 10px 40px;">
+                                <h1 style="font-size:24px; font-weight:600; color:#222222; margin:30px 0 10px 0;">%s</h1>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding:0 40px 30px 40px;">
+                                <p style="font-size:16px; line-height:1.6; color:#444444; margin:0;">%s</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="padding:20px 40px 40px 40px; border-top:1px solid #e5e7eb;">
+                                <p style="font-size:13px; color:#999999; margin:0;">
+                                    © 2025 <strong>Sito Vetrina</strong> · Tutti i diritti riservati<br>
+                                    <a href="https://www.tuosito.it" style="color:#a48b5f; text-decoration:none;">www.tuosito.it</a>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    """.formatted(title, body);
+    }
+
 }

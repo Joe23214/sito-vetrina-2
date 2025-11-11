@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://unsubscribeView.title">
+    <layout classNames="unsubscribe-layout ">
+        <div classNames="unsubscribe-card">
+            <h2 text="Newsletter - Disiscrizione" classNames="m-b-xl"/>
+            <div id="infoLabel" classNames="info-text mt-xl" text="Caricamento..."/>
+            <button id="confirmButton" text="Conferma disiscrizione"
+                    classNames="unsubscribe-button m-t-l"/>
+        </div>
+    </layout>
+</view>

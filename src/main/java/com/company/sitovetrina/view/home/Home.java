@@ -16,6 +16,9 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import io.jmix.core.DataManager;
 import io.jmix.core.security.CurrentAuthentication;
+import io.jmix.email.EmailInfo;
+import io.jmix.email.EmailInfoBuilder;
+import io.jmix.email.Emailer;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,68 +81,144 @@ public class Home extends StandardView {
     private H3 aboutTitle2;
     @ViewComponent
     private Div aboutText2;
+    @Autowired
+    private Emailer emailer;
+    private String generateConfirmationEmailHtml(String email) {
+        return """
+    <html>
+    <body style="margin:0; padding:0; background-color:#f3f4f6; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%%" 
+               style="background-color:#f3f4f6; padding:40px 0;">
+            <tr>
+                <td align="center">
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="600" 
+                           style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                        <!-- Logo -->
+                        <tr>
+                            <td align="center" style="padding:40px 20px 10px 20px;">
+                                <img src="https://www.tuosito.it/images/logo.png" alt="Logo" width="160"
+                                     style="display:block; margin:auto; border:0;">
+                            </td>
+                        </tr>
+                        <!-- Titolo -->
+                        <tr>
+                            <td align="center" style="padding:0 40px 10px 40px;">
+                                <h1 style="font-size:24px; font-weight:600; color:#222222; margin:30px 0 10px 0;">
+                                    Benvenuto nella nostra Newsletter
+                                </h1>
+                            </td>
+                        </tr>
+                        <!-- Corpo -->
+                        <tr>
+                            <td align="left" style="padding:0 40px 20px 40px;">
+                                <p style="font-size:16px; line-height:1.6; color:#444444;">
+                                    Ciao <strong>%s</strong>,<br><br>
+                                    grazie per esserti iscritto alla nostra newsletter!  
+                                    Da oggi riceverai in anteprima notizie, offerte esclusive e aggiornamenti dal nostro sito.
+                                </p>
+                            </td>
+                        </tr>
+                        <!-- Bottone -->
+                        <tr>
+                            <td align="center" style="padding:20px 40px 40px 40px;">
+                                <a href="https://www.tuosito.it"
+                                   style="background-color:#a48b5f; color:#ffffff; text-decoration:none; 
+                                          padding:12px 28px; border-radius:6px; font-weight:600; display:inline-block;">
+                                    Visita il nostro sito
+                                </a>
+                            </td>
+                        </tr>
+                        <!-- Footer -->
+                        <tr>
+                            <td align="center" style="padding:20px 40px 40px 40px; border-top:1px solid #e5e7eb;">
+                                <p style="font-size:13px; color:#999999; margin:0;">
+                                    © 2025 <strong>Sito Vetrina</strong> · Tutti i diritti riservati<br>
+                                    <a href="https://www.tuosito.it/privacy" 
+                                       style="color:#a48b5f; text-decoration:none;">Privacy Policy</a>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <!-- Link disiscrizione -->
+        <p style="font-size:13px; color:#999999; text-align:center; margin-top:30px;">
+            Se non vuoi più ricevere queste email, 
+            <a href="https://www.tuosito.it/unsubscribe?email=%s" 
+               style="color:#a48b5f; text-decoration:none;">clicca qui per disiscriverti</a>.
+        </p>
+    </body>
+    </html>
+    """.formatted(email, email);
+    }
 
-   /* @Subscribe("newsletterButton")
-    public void onNewsletterButtonClick(ClickEvent<Button> event) {*/
-       /* String email = newsletterEmail.getValue();
 
+    @Subscribe("newsletterButton")
+    public void onNewsletterButtonClick(ClickEvent<Button> event) {
+        String email = newsletterEmail.getValue();
+
+        // --- Validazione email ---
         if (email == null || email.isBlank()) {
-            notifications.create("Inserisci una email valida!")
+            notifications.create("Inserisci una email!")
                     .withType(Notifications.Type.WARNING)
                     .show();
             return;
         }
 
-        // simuliamo l’iscrizione
-        notifications.create("Adesso sei iscritta/o alla newsletter!")
-                .withType(Notifications.Type.SUCCESS)
-                .show();
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            notifications.create("Formato email non valido!")
+                    .withType(Notifications.Type.WARNING)
+                    .show();
+            return;
+        }
 
-        newsletterEmail.clear();*/
-        @Subscribe("newsletterButton")
-        public void onNewsletterButtonClick(ClickEvent<Button> event) {
-            String email = newsletterEmail.getValue();
+        // --- Controllo se già iscritta ---
+        Optional<Newsletter> existing = dataManager.load(Newsletter.class)
+                .query("select n from Newsletter n where n.email = :email")
+                .parameter("email", email)
+                .optional();
 
-            // --- Verifica che sia un indirizzo email valido ---
-            if (email == null || email.isBlank()) {
-                notifications.create("Inserisci una email!")
-                        .withType(Notifications.Type.WARNING)
-                        .show();
-                return;
-            }
+        if (existing.isPresent()) {
+            notifications.create("Questa email è già iscritta alla newsletter.")
+                    .withType(Notifications.Type.WARNING)
+                    .show();
+            return;
+        }
 
-            // Regex base per email
-            if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-                notifications.create("Formato email non valido!")
-                        .withType(Notifications.Type.WARNING)
-                        .show();
-                return;
-            }
+        // --- Salvataggio nuova iscrizione ---
+        Newsletter n = dataManager.create(Newsletter.class);
+        n.setEmail(email);
+        dataManager.save(n);
 
-            // --- Controllo se già presente ---
-            Optional<Newsletter> existing = dataManager.load(Newsletter.class)
-                    .query("select n from Newsletter n where n.email = :email")
-                    .parameter("email", email)
-                    .optional();
+        // --- Invio mail di conferma ---
+        try {
+            String subject = "🎉 Benvenuto nella Newsletter di Sito Vetrina!";
+            String body = generateConfirmationEmailHtml(email);
 
-            if (existing.isPresent()) {
-                notifications.create("Questa email è già iscritta alla newsletter.")
-                        .withType(Notifications.Type.WARNING)
-                        .show();
-                return;
-            }
+            EmailInfo confirmationEmail = EmailInfoBuilder.create()
+                    .setAddresses(email)
+                    .setSubject(subject)
+                    .setBody(body)
+                    .setBodyContentType("text/html")
+                    .build();
 
-            // --- Salvataggio nuova iscrizione ---
-            Newsletter n = dataManager.create(Newsletter.class);
-            n.setEmail(email);
-            dataManager.save(n);
+            emailer.sendEmail(confirmationEmail);
 
-            notifications.create("Iscrizione completata con successo!")
+            notifications.create("Iscrizione completata! Controlla la tua email per la conferma.")
                     .withType(Notifications.Type.SUCCESS)
                     .show();
 
-            newsletterEmail.clear();
+        } catch (Exception e) {
+            System.err.println("Errore invio mail di conferma: " + e.getMessage());
+            notifications.create("Iscrizione salvata, ma errore nell'invio email.")
+                    .withType(Notifications.Type.WARNING)
+                    .show();
         }
+
+        newsletterEmail.clear();
+    }
+
 
 
     @Subscribe
@@ -258,50 +337,125 @@ public class Home extends StandardView {
         }
     }
 
+  @Subscribe
+  public void onBeforeShow(BeforeShowEvent event) {
+      Configsitovetrina config = dataManager.load(Configsitovetrina.class).id(1).optional().orElse(null);
+      if (config == null) return;
 
+      boolean loggedIn = currentAuthentication.getUser().getAuthorities().stream()
+              .noneMatch(auth -> "anonymous-role".equals(auth.getAuthority()));
 
+      Configsitovetrina cfg = config; // già caricato
+      if (cfg != null) {
+          String orari = cfg.getOrari();
+          String linkMaps = cfg.getLinkMaps();
+          String indirizzo = cfg.getIndirizzo();
+          String whatsapp = cfg.getLinkWhatsap(); // numero internazionale senza '+', es: 393401234567
 
+          // --- Orari ---
+          if (orari != null && !orari.isBlank()) {
+              String[] righe = orari.split("\\r?\\n");
+              StringBuilder htmlOrari = new StringBuilder("<ul style='list-style:none; padding:0; margin:0;'>");
 
-    @Subscribe
-    public void onBeforeShow(BeforeShowEvent event) {
-        Configsitovetrina config = dataManager.load(Configsitovetrina.class).id(1).optional().orElse(null);
-        if (config == null) return;
-        boolean loggedIn = currentAuthentication.getUser().getAuthorities().stream()
-                .noneMatch(auth -> "anonymous-role".equals(auth.getAuthority()));
+              // Giorni della settimana (in maiuscolo per il match)
+              String[] giorni = {"LUNEDI", "MARTEDI", "MERCOLEDI", "GIOVEDI", "VENERDI", "SABATO", "DOMENICA"};
 
+              for (String riga : righe) {
+                  String testo = riga.trim();
+                  String giornoColorato = testo;
 
+                  // Cerca il giorno nella riga e lo colora
+                  for (String giorno : giorni) {
+                      if (testo.toUpperCase().startsWith(giorno)) {
+                          // Evidenzia il giorno in rosso (accent color)
+                          String parteGiorno = testo.substring(0, giorno.length());
+                          String parteResto = testo.substring(giorno.length()).trim();
 
-        // --- POPOLAMENTO FOOTER ---
-        getElement().executeJs("""
-        const nome = $0;
-        const ragione = $1;
-        const indirizzo = $2;
-        const tel = $3;
-        const email = $4;
-        const socialDiv = document.getElementById('footerSocial');
-        document.getElementById('footerNomeSito').innerText = nome;
-        document.getElementById('footerRagioneSociale').innerText = ragione;
-        document.getElementById('footerIndirizzo').innerText = indirizzo;
-        document.getElementById('footerTelefono').innerText = tel;
-        document.getElementById('footerEmail').innerText = email;
+                          giornoColorato = "<span style='color: var(--accent-glow); font-weight:700;'>" + parteGiorno + "</span>"
+                                  + " <span style='color:#FFFFFF;'>" + parteResto + "</span>";
+                          break;
+                      }
+                  }
 
-        socialDiv.innerHTML = '';
-        if ($5) socialDiv.innerHTML += `<img src="https://i.postimg.cc/wvKhz8r6/icons8-facebook-50.png" style="cursor:pointer" onclick="window.open('$5','_blank')"/>`;
-        if ($6) socialDiv.innerHTML += `<img src="https://i.postimg.cc/RV0JjZ07/icons8-instagram-48.png" style="cursor:pointer" onclick="window.open('$6','_blank')"/>`;
-        if ($7) socialDiv.innerHTML += `<img src="https://i.postimg.cc/nVYPwVhy/icons8-tic-toc-50.png" style="cursor:pointer" onclick="window.open('$7','_blank')"/>`;
-    """,
-                config.getNomeSito(),
-                config.getRagioneSociale(),
-                config.getIndirizzo(),
-                config.getTelefono(),
-                config.getEmailContatti(),
-                config.getLinkFacebook(),
-                config.getLinkInsta(),
-                config.getLinkTikTok()
-        );
+                  htmlOrari.append("<li style='padding:4px 0; font-weight:500;'>").append(giornoColorato).append("</li>");
+              }
 
-        // --- CAROSELLO CINEMATICO ---
-        getElement().executeJs("""
+              htmlOrari.append("</ul>");
+              getElement().executeJs("document.getElementById('orariList').innerHTML = $0;", htmlOrari.toString());
+          }
+
+          if (linkMaps != null && !linkMaps.isBlank()) {
+              // Rimuove il contenuto statico e inserisce l’HTML del backend
+              getElement().executeJs("""
+        const container = document.querySelector('.luogo-card .map-container');
+        if (container) {
+            container.innerHTML = $0; // inserisce direttamente l’iframe da backend
+        }
+        const addrEl = document.getElementById('addressText');
+        if (addrEl) addrEl.innerText = $1 || '';
+    """, linkMaps, indirizzo);
+          }
+
+          // --- POPOLAMENTO FOOTER + SOCIAL + WHATSAPP ---
+          getElement().executeJs("""
+            const nome = $0;
+            const ragione = $1;
+            const indirizzo = $2;
+            const tel = $3;
+            const email = $4;
+            const socialDiv = document.getElementById('footerSocial');
+
+            document.getElementById('footerNomeSito').innerText = nome;
+            document.getElementById('footerRagioneSociale').innerText = ragione;
+            document.getElementById('footerIndirizzo').innerText = indirizzo;
+            document.getElementById('footerTelefono').innerText = tel;
+            document.getElementById('footerEmail').innerText = email;
+
+            socialDiv.innerHTML = '';
+            if ($5) socialDiv.innerHTML += `<img src="https://i.postimg.cc/wvKhz8r6/icons8-facebook-50.png" style="cursor:pointer; margin-right:8px;" onclick="window.open('$5','_blank')"/>`;
+            if ($6) socialDiv.innerHTML += `<img src="https://i.postimg.cc/RV0JjZ07/icons8-instagram-48.png" style="cursor:pointer; margin-right:8px;" onclick="window.open('$6','_blank')"/>`;
+            if ($7) socialDiv.innerHTML += `<img src="https://i.postimg.cc/nVYPwVhy/icons8-tic-toc-50.png" style="cursor:pointer; margin-right:8px;" onclick="window.open('$7','_blank')"/>`;
+            if ($8) socialDiv.innerHTML += `<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" style="cursor:pointer; margin-right:8px;" onclick="location.href='https://wa.me/${$8}'"/>`;
+
+            // --- Badge WhatsApp fisso in basso a destra ---
+            if ($8) {
+            if (!document.getElementById('whatsappBadge')) {
+            let badge = document.createElement('a');
+                badge.href = 'https://wa.me/' + $8;
+                badge.target = '_blank';
+                badge.id = 'whatsappBadge';
+                badge.style.position = 'fixed';
+                badge.style.bottom = '20px';
+                badge.style.right = '20px';
+                badge.style.width = '56px';
+                badge.style.height = '56px';
+                badge.style.borderRadius = '50%';
+                badge.style.backgroundColor = '#25D366';
+                badge.style.display = 'flex';
+                badge.style.justifyContent = 'center';
+                badge.style.alignItems = 'center';
+                badge.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                badge.style.cursor = 'pointer';
+                badge.style.zIndex = '9999';
+               badge.innerHTML = `<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" style="width:28px; height:28px; filter: invert(1);">`;
+                document.body.appendChild(badge);
+            }                
+            }
+        """,
+                  config.getNomeSito(),
+                  config.getRagioneSociale(),
+                  config.getIndirizzo(),
+                  config.getTelefono(),
+                  config.getEmailContatti(),
+                  config.getLinkFacebook(),
+                  config.getLinkInsta(),
+                  config.getLinkTikTok(),
+                  whatsapp
+          );
+      }
+
+      // --- CAROSELLO CINEMATICO ---
+      getElement().executeJs("""
         const carousel = document.querySelector('.carousel');
         if (!carousel) return;
 
@@ -312,7 +466,6 @@ public class Home extends StandardView {
         let timer = null;
         let isPaused = false;
 
-        // --- Stili di base ---
         slides.forEach(s => {
             s.style.position = 'absolute';
             s.style.top = '0';
@@ -325,7 +478,6 @@ public class Home extends StandardView {
             s.style.zIndex = '0';
         });
 
-        // --- Creazione indicatori ---
         const dots = document.createElement('div');
         dots.className = 'carousel-dots';
         slides.forEach((_, i) => {
@@ -336,7 +488,6 @@ public class Home extends StandardView {
         });
         carousel.appendChild(dots);
 
-        // --- Pulsanti freccia ---
         const left = document.createElement('div');
         const right = document.createElement('div');
         left.className = 'carousel-btn left';
@@ -348,7 +499,6 @@ public class Home extends StandardView {
         carousel.appendChild(left);
         carousel.appendChild(right);
 
-        // --- Effetto di transizione cinematico ---
         function cinematicShow(current, next) {
             if (!current || !next) return;
             current.animate([
@@ -362,7 +512,6 @@ public class Home extends StandardView {
             ], { duration: 1200, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
         }
 
-        // --- Mostra slide ---
         function show(i) {
             const prevSlide = slides[index];
             const nextSlide = slides[i];
@@ -383,7 +532,6 @@ public class Home extends StandardView {
         function next() { goTo(index + 1); }
         function prev() { goTo(index - 1); }
 
-        // --- AutoPlay ---
         function startAuto() {
             if (timer) clearInterval(timer);
             timer = setInterval(() => { if (!isPaused) next(); }, 3000);
@@ -392,7 +540,6 @@ public class Home extends StandardView {
         carousel.addEventListener('mouseenter', () => isPaused = true);
         carousel.addEventListener('mouseleave', () => isPaused = false);
 
-        // --- Swipe mobile ---
         let startX = 0, diffX = 0;
         carousel.addEventListener('touchstart', e => startX = e.touches[0].clientX);
         carousel.addEventListener('touchmove', e => diffX = e.touches[0].clientX - startX);
@@ -401,34 +548,32 @@ public class Home extends StandardView {
             diffX = 0;
         });
 
-        // --- Tastiera ---
         window.addEventListener('keydown', e => {
             if (e.key === 'ArrowRight') next();
             if (e.key === 'ArrowLeft') prev();
         });
 
-        // --- Avvio ---
         slides[0].style.opacity = '1';
         slides[0].style.zIndex = '2';
         dots.firstChild.classList.add('active');
         startAuto();
     """);
 
-    getElement().executeJs("""
-    // --- ANIMAZIONE FADE-IN ON SCROLL ---
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
+      // --- ANIMAZIONE FADE-IN ON SCROLL ---
+      getElement().executeJs("""
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.fade-in-section, .gallery-item').forEach(el => {
+            observer.observe(el);
         });
-    }, { threshold: 0.15 });
+    """);
+  }
 
-    document.querySelectorAll('.fade-in-section, .gallery-item').forEach(el => {
-        observer.observe(el);
-    });
-""");
-
-    }
 }

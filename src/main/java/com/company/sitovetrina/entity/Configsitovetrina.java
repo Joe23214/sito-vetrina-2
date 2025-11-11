@@ -59,11 +59,22 @@ public class Configsitovetrina {
     @Column(name = "`linkInsta`", length = 200)
     private String linkInsta;
 
+    @Column(name = "`linkMaps`")
+    @Lob
+    private String linkMaps;
+
     @Column(name = "`linkTikTok`", length = 200)
     private String linkTikTok;
 
+    @Column(name = "`linkWhatsap`", length = 350)
+    private String linkWhatsap;
+
     @Column(name = "nome_sito", length = 150)
     private String nomeSito;
+
+    @Column(name = "orari")
+    @Lob
+    private String orari;
 
     @Column(name = "piva", length = 12)
     private String piva;
@@ -109,6 +120,14 @@ public class Configsitovetrina {
         this.piva = piva;
     }
 
+    public String getOrari() {
+        return orari;
+    }
+
+    public void setOrari(String orari) {
+        this.orari = orari;
+    }
+
     public String getNomeSito() {
         return nomeSito;
     }
@@ -117,12 +136,28 @@ public class Configsitovetrina {
         this.nomeSito = nomeSito;
     }
 
+    public String getLinkWhatsap() {
+        return linkWhatsap;
+    }
+
+    public void setLinkWhatsap(String linkWhatsap) {
+        this.linkWhatsap = linkWhatsap;
+    }
+
     public String getLinkTikTok() {
         return linkTikTok;
     }
 
     public void setLinkTikTok(String linkTikTok) {
         this.linkTikTok = linkTikTok;
+    }
+
+    public String getLinkMaps() {
+        return linkMaps;
+    }
+
+    public void setLinkMaps(String linkMaps) {
+        this.linkMaps = linkMaps;
     }
 
     public String getLinkInsta() {

@@ -28,6 +28,7 @@ a { text-decoration: none; color: inherit; }
 
 /* --- HERO SECTION --- */
 .hero-banner {
+    min-height: 400px;
     position: relative;
     width: 100%;
     height: 80vh;
@@ -831,4 +832,731 @@ vaadin-menu-bar-item::part(content),
 .bg-dark{
     background-color: var(--bg-soft) !important;
     color: var(--accent) !important;
+}
+/* === SEZIONE UNSUBSCRIBE / INFO / SERVIZI - VERSIONE UNIFICATA === */
+
+.unsubscribe-layout {
+    min-height: 80vh;
+    background-color: var(--bg-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+}
+
+.unsubscribe-card {
+    background: var(--bg-soft);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 500px;
+    color: var(--text-light);
+}
+
+.unsubscribe-button {
+    background-color: var(--accent);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 18px rgba(212,42,59,0.25);
+}
+
+.unsubscribe-button:hover {
+    background-color: var(--accent-glow);
+    transform: translateY(-2px);
+}/* --- INFO CARDS --- */
+.info-card-section {
+    width: 100%;
+    margin: 0 auto 60px auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.info-card-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 40px;                /* spazio tra le due card */
+    width: 90%;               /* margini laterali */
+    margin: 0 auto;
+    flex-wrap: wrap;          /* si adattano su schermi piccoli */
+}
+
+/* Card base */
+.info-card {
+    background-color: var(--bg-soft);
+    border-radius: 16px;
+    padding: 28px;
+    flex: 1 1 45%;            /* occupano circa metà spazio ciascuna */
+    min-width: 360px;
+    max-width: 600px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    color: var(--accent-glow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+/* Card orari */
+.orari-card {
+    flex: 1 1 40%;
+}
+
+/* Card luogo (più grande) */
+.luogo-card {
+    flex: 1 1 55%;
+}
+/* --- RESPONSIVE DESIGN --- */
+
+/* Tablet: schermi fino a 992px */
+@media (max-width: 992px) {
+    .info-card-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        width: 95%;
+    }
+
+    .info-card {
+        max-width: 90%;
+        flex: 1 1 100%;
+    }
+
+    .map-container img {
+        max-height: 400px; /* impedisce che la mappa diventi troppo alta */
+    }
+}
+
+/* Smartphone: schermi fino a 600px */
+@media (max-width: 600px) {
+    .info-card {
+        padding: 20px;
+        max-width: 95%;
+    }
+
+    .address-text:first-child {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    #addressText {
+        text-align: center;
+    }
+}
+
+/* Titoli in rosso, maiuscolo, grassetto */
+.info-card .address-text:first-child {
+    color: red;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+/* Testo orari in rosso */
+.orari-card .address-text,
+.orari-card #orariList {
+    color: red;
+    font-weight: 600;
+}
+
+/* Mappa */
+.map-container {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.map-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;          /* evita che l’immagine “esca” dalla card */
+    transition: transform 0.3s ease;
+}
+
+.map-container img:hover {
+    transform: scale(1.03);
+}
+
+/* Testo indirizzo */
+#addressText {
+    margin-top: 12px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* --- BADGE WHATSAPP --- */
+#whatsappBadge {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #25D366;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#whatsappBadge img {
+    width: 28px;
+    height: 28px;
+}
+#whatsappBadge:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 480px) {
+    #whatsappBadge {
+        bottom: 15px;
+        right: 15px;
+        width: 48px;
+        height: 48px;
+    }
+    #whatsappBadge img {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* --- SERVIZI GRID / CARD --- */
+.services-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 4rem 0;
+    background: var(--bg-dark);
+    box-sizing: border-box;
+}
+
+.services-grid {
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+    align-items: start;
+    justify-items: stretch;
+    grid-auto-rows: auto;
+}
+
+.service-card {
+    background: var(--bg-soft);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    transition: transform 0.45s cubic-bezier(.2,.8,.2,1), box-shadow 0.45s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    color: var(--text-light);
+}
+
+
+.service-card-title {
+    color: var(--accent);
+    font-size: 1.35rem;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+.service-card-subtitle {
+    color: var(--accent-glow);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.service-card-desc {
+    color: var(--text-muted);
+    line-height: 1.5;
+    font-size: 0.98rem;
+    margin-top: 8px;
+}
+
+.attachment-img-thumb {
+    width: 100%;
+    height: auto; /* si adatta al contenitore senza overflow */
+    object-fit: contain; /* mantiene proporzioni */
+    margin-top: 12px;
+    border-radius: 10px;
+}
+
+.attachment-img-thumb:hover { transform: scale(1.02); }
+
+.pdf-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* --- SERVICE FULLPAGE --- */
+.service-fullpage-wrapper {
+    min-height: 1000px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start; /* top */
+    padding: 20px;
+    background: var(--bg-dark);
+    overflow-y: auto;
+}
+
+/* Card */
+.service-fullpage-card {
+    width: 95%;
+    max-width: none;
+    background: var(--bg-soft);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+    display: block;
+    color: var(--text-light);
+    min-height: 1000px;
+}
+.inline-pdf {
+    width: 100%;
+    min-height: 1000px;  /* garantisce altezza minima */
+    border: none;
+}
+
+
+@keyframes entrance {
+    from { transform: translateY(18px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.service-header .service-title {
+    font-size: 2.6rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+.service-header .service-subtitle {
+    color: var(--accent-glow);
+    font-size: 1.05rem;
+    margin-bottom: 18px;
+}
+.service-description {
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-size: 1.05rem;
+}
+
+.service-attachments.fullpage {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(212,42,59,0.08), rgba(0,0,0,0.05));
+    align-self: stretch;
+}
+
+.attachment-img-full {
+    width: 100%;
+    height: 50vh;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #111;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.service-cta { margin-top: 14px; }
+.service-cta .jmix-button {
+    background: linear-gradient(90deg, var(--accent), var(--accent-glow));
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+.service-cta .jmix-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(255,68,85,0.3);
+}
+
+@media (max-width: 900px) {
+    .service-fullpage-card {
+        grid-template-columns: 1fr;
+        padding: 26px 16px;
+    }
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.no-services {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px;
+}
+.no-services h2 {
+    color: var(--accent);
+}
+
+.unsubscribe-card h2{
+    color: var(--accent);
+}
+.newsLetterS-layout{
+    min-height: 80vh;
+    background-color: var(--bg-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+}
+.newsLetterS-layout h2,label {
+    color: var(--accent);
+}
+
+vaadin-notification-card::part(overlay) {
+    background-color: #111 !important; /* Sfondo nero */
+    color: #d42a3b !important;         /* Testo rosso */
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    padding: 12px 20px;
+    max-width: 400px;   /* limita larghezza */
+    width: auto;        /* adatta al contenuto */
+    margin: 0 auto;     /* centra la notifica */
+    text-align: center;
+}
+
+/* Assicura che il contenuto eredità il colore rosso */
+vaadin-notification-card::part(content) {
+    color: #d42a3b !important;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Pulsante di chiusura */
+vaadin-notification-card::part(close-button) {
+    color: #d42a3b !important;
+}
+
+.services-grid {
+    display: grid;
+    width: 100%;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(45%, 1fr));
+    align-items: start; /* le card crescono in altezza senza sovrapporsi */
+}
+
+
+/* --- INLINE ATTACHMENTS --- */
+.inline-attachments {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* --- FULLSCREEN (singolo servizio) --- */
+.inline-attachments.fullpage {
+    flex: 1;             /* occupa tutto lo spazio verticale della card */
+    padding: 12px 0;
+}
+
+.inline-attachments.fullpage img,
+.inline-attachments.fullpage iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 900px;   /* desktop */
+    object-fit: contain;  /* mantiene proporzioni, niente tagli */
+    border: none;
+    border-radius: 12px;
+}
+
+@media (max-width: 1023px) {
+    .inline-attachments.fullpage img,
+    .inline-attachments.fullpage iframe {
+        min-height: 600px;
+    }
+}
+
+@media (max-width: 767px) {
+    .inline-attachments.fullpage img,
+    .inline-attachments.fullpage iframe {
+        min-height: 300px;
+    }
+}
+
+/* --- GRIGLIA MULTIPLA (più servizi) --- */
+.inline-attachments.thumb {
+    flex: none;
+    height: auto;
+}
+
+.inline-attachments.thumb img,
+.inline-attachments.thumb iframe {
+    width: 100%;
+    height: auto;
+    max-height: 400px;    /* mantiene proporzioni */
+    object-fit: contain;
+    border-radius: 10px;
+    margin-top: 12px;
+}
+
+/* PDF specifici */
+.inline-pdf.thumb {
+    max-height: 400px;
+}
+
+/* Fullpage PDF */
+.inline-pdf.fullpage {
+    width: 100%;
+    height: 100%;
+}
+
+/* --- CARDS --- */
+.service-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--bg-soft);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    color: var(--text-light);
+    min-height: 200px;
+    overflow: hidden;
+}
+
+/* --- FULLPAGE CARD --- */
+.service-fullpage-card {
+    width: 95%;
+    max-width: none;
+    background: var(--bg-soft);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+    color: var(--text-light);
+    min-height: 900px;   /* fullpage altezza minima */
+}
+
+/* Responsive Fullpage */
+@media (max-width: 1023px) {
+    .service-fullpage-card {
+        min-height: 80%;
+    }
+}
+
+@media (max-width: 767px) {
+    .service-fullpage-card {
+        min-height: 80%;
+    }
+}
+/* Default: layout orizzontale (desktop) */
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+/* Mobile: diventa menu verticale a scomparsa */
+@media (max-width: 768px) {
+    .hero-banner {
+        min-height: 200px;
+    }
+    .nav-content {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        flex-direction: column;           /* ← UNO SOTTO L’ALTRO */
+        justify-content: flex-start;
+        align-items: center;              /* centrati orizzontalmente */
+        background-color: var(--bg-dark, #111);
+        padding: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        max-height: 0;                    /* nascosto di default */
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    /* Quando è aperto */
+    .nav-content.open {
+        max-height: 600px;                /* mostra il contenuto */
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Allinea meglio i figli */
+    .nav-content > * {
+        margin: 10px 0;                   /* spazio verticale tra elementi */
+        width: 100%;
+        text-align: center;               /* centra testo e pulsanti */
+    }
+
+    /* Nascondi hamburger su desktop, mostra su mobile */
+    .hamburger-button {
+        display: block;
+    }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+    .hamburger-button {
+        display: none;
+    }
+
+}
+/* --- FIX: service-card content & fullscreen button --- */
+/* Forza layout verticale interno della card (assicura che figli stiano uno sotto l'altro) */
+.service-card .service-card-content,
+.service-card-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: stretch !important; /* figli occupano tutta la larghezza */
+}
+
+/* Assicura che la sezione allegati sia a blocco (verticale) */
+.service-card .service-card-attachments,
+.service-card-attachments {
+    display: block !important;
+    width: 100% !important;
+    margin-top: 6px !important;
+    clear: both; /* evita float residui */
+}
+
+/* Stile pulsante fullscreen ben visibile */
+.fullscreen-btn {
+    display: inline-block !important;
+    align-self: flex-start !important; /* mantiene il pulsante all'inizio della riga */
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    background: linear-gradient(90deg, var(--accent), var(--accent-glow)) !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    box-shadow: 0 8px 20px rgba(212,42,59,0.18) !important;
+    margin-bottom: 8px !important;
+}
+
+/* Hover */
+.fullscreen-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(255,68,85,0.18);
+}
+
+/* Se per qualche motivo il tuo tema forza display:inline-block o float, neutralizziamo */
+.fullscreen-btn[style] { /* nessun-op se inline style presente */
+}
+
+/* Fullscreen overlay (se lo usi) */
+.fullscreen-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(7,8,10,0.86);
+    padding: 20px;
+}
+
+/* contenuto dentro overlay */
+.fullscreen-content {
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    max-height: 95vh;
+    overflow: auto;
+}
+
+/* bottone chiudi overlay */
+.close-fullscreen-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 20010;
+    background: rgba(0,0,0,0.45);
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    border: none;
+}
+/* Contenitore titolo + pulsante, sempre flessibile */
+.service-card-title-container {
+    display: flex;
+    justify-content: space-between; /* titolo a sinistra, pulsante a destra */
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+.pdf-wrapper {
+    display: block;
+    width: 100%;
+}
+.pdf-wrapper iframe {
+    pointer-events: none; /* evita che l’iframe catturi il click */
+}
+
+/* Hover solo su desktop */
+@media (min-width: 769px) {
+    .service-card {
+        transition: transform 0.45s cubic-bezier(.2,.8,.2,1), box-shadow 0.45s ease, z-index 0.45s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+        z-index: 10; /* porta la card sopra le altre durante l’hover */
+    }
+}
+
+
+@media (max-width: 767px) {
+    .services-grid {
+        grid-template-columns: 1fr; /* UNA SOLA COLONNA su mobile */
+        gap: 16px;
+    }
+}
+@media (max-width: 767px) {
+    .inline-attachments.thumb img,
+    .inline-attachments.thumb iframe {
+        max-height: 250px !important;
+        width: 100%;
+        object-fit: contain;
+    }
+
+    .inline-pdf.thumb {
+        max-height: 250px !important;
+    }
+}
+.pdf-wrapper {
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+@media (max-width: 767px) {
+    .pdf-wrapper {
+        max-height: 250px;
+    }
+    .pdf-wrapper iframe {
+        height: 100%;
+    }
 }

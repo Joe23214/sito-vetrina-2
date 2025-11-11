@@ -19,16 +19,16 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="servizioDc">
+        <formLayout classNames="form-section" id="form" dataContainer="servizioDc">
             <responsiveSteps>
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <dateTimePicker id="dataCreazioneField" property="dataCreazione"/>
-            <textArea id="descrizioneField" height="9.5em" property="descrizione"/>
-            <textField id="linkInfoField" property="linkInfo"/>
-            <textField id="sottoTitoloField" property="sottoTitolo"/>
-            <textField id="titoloField" property="titolo"/>
+            <textArea classNames="v-text-area" id="descrizioneField" height="9.5em" property="descrizione"/>
+            <textField classNames="v-text-field" id="linkInfoField" property="linkInfo"/>
+            <textField classNames="v-text-field" id="sottoTitoloField" property="sottoTitolo"/>
+            <textField classNames="v-text-field" id="titoloField" property="titolo"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveAction"/>

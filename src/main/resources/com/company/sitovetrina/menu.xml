@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu-config xmlns="http://jmix.io/schema/flowui/menu">
     <item icon="vaadin:home" view="Home" title="msg://com.company.sitovetrina.view.home/home.title"/>
+    <item view="Servizi" title="msg://com.company.sitovetrina.view.servizi/servizi.title"/>
     <item icon="lumo:edit" view="Configsitovetrina" title="msg://Configurazione Sito"/>
-    <menu title="Admin Menù" classNames="bg-dark" icon="lumo:menu" id="menu">
-        <item classNames="bg-dark" view="User.list" title="Lista User Standard"/>
-        <item classNames="bg-dark" view="Userv.list"  title="Lista User custom"/>
-        <item classNames="bg-dark" view="Uservpass.list"  title="Lista User Custom Dati Accesso"/>
-        <item classNames="bg-dark" view="Messaggio.list" title="config Messagi"/>
-        <item classNames="bg-dark" view="Servizio.list" title="config Servizi"/>
-        <item view="Servizi" title="msg://com.company.sitovetrina.view.servizi/servizi.title"/>
-        <item view="Newsletter.list" title="msg://com.company.sitovetrina.view.newsletter/newsletterListView.title"/>
-        <item view="NewsletterAdminView"
-              title="msg://com.company.sitovetrina.view.newsletteradmin/newsletterAdminView.title"/>
-    </menu>
-
+    <item icon="vaadin:mailbox" view="NewsletterAdminView" title="msg://com.company.sitovetrina.view.newsletteradmin/newsletterAdminView.title"/>
+    <item icon="lumo:user"  view="User.list" title="Lista User Standard"/>
+    <item icon="vaadin:newspaper" view="Messaggio.list" title="config Messagi"/>
+    <item icon="vaadin:clipboard-text" view="Newsletter.list" title="msg://com.company.sitovetrina.view.newsletter/newsletterListView.title"/>
+    <item  view="Servizio.list" title="config Servizi"/>
 </menu-config>

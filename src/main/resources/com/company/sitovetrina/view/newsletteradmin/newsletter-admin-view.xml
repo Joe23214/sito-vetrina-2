@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
       title="msg://newsletterAdminView.title">
-    <layout>
+    <layout classNames="newsLetterS-layout">
         <h2 text="Invia una newsletter" />
 
-        <textField id="subjectField" label="Oggetto" />
-        <textField id="titleField" label="Titolo (facoltativo)" />
-        <textArea id="bodyField" label="Testo email"  />
+        <textField  id="subjectField" label="Oggetto" classNames="v-text-field" />
+        <textField id="titleField" label="Titolo (facoltativo)" classNames="v-text-field" />
+        <textArea id="bodyField" label="Testo email"  classNames="v-text-area" height="8em" />
 
         <fileStorageUploadField id="attachmentField"
                                 label="Allegato (opzionale)"

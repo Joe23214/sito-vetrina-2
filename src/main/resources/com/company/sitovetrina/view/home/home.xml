@@ -6,11 +6,13 @@
 
         <!-- LOGO IN ALTO -->
         <div id="logoContainer" classNames="logo-container">
-            <image id="logo" classNames="logo-top"/>
+            <image id="logo" classNames="logo-top fade-in-section"/>
         </div>
 
+        <h1 id="homeTitle" classNames="home-title m-xl fade-in-section"></h1>
+
         <!-- HERO BANNER (80%) -->
-        <div id="hero" classNames="hero-banner">
+        <div id="hero" classNames="hero-banner mt-l fade-in-section">
             <image id="heroImage" classNames="hero-image"/>
             <div id="heroOverlay" classNames="hero-overlay">
                 <div id="heroText" classNames="hero-text">
@@ -20,7 +22,7 @@
         </div>
 
         <!-- NOME SITO -->
-        <h1 id="homeTitle" classNames="home-title m-xl"></h1>
+
 
         <!-- DESCRIZIONE SITO -->
         <div id="descrCard" classNames="about-card fade-in-section">
@@ -71,6 +73,35 @@
                 </div>
             </div>
         </div>
+        <!-- =================================================== -->
+        <!-- 🕒📍 SEZIONE ORARI + LUOGO COME DUE CARD -->
+        <!-- =================================================== -->
+            <div id="infoCardSection" classNames="info-card-section fade-in-section">
+
+                <div classNames="info-card-container">
+
+                    <!-- Card Orari -->
+                    <div classNames="info-card">
+                        <h3 classNames="address-text" text="Orari di apertura:"></h3>
+                        <div id="orariList" classNames="address-text"></div>
+                    </div>
+
+                    <!-- Card Luogo -->
+                    <div classNames="info-card luogo-card">
+                        <h3 classNames="address-text" text="Dove siamo"></h3>
+                        <div classNames="map-container">
+                            <image id="mapImage" title="Mappa Luogo" css="cursor:pointer;"></image>
+                        </div>
+
+                        <div>
+                            <p css="color: #FFFFFF;" id="addressText"></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
         <!-- =================================================== -->
         <!-- ✉️ SEZIONE NEWSLETTER -->
         <!-- =================================================== -->

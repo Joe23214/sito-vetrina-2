@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
       title="msg://servizi.title">
-    <layout>
+    <layout classNames="servizi-layout">
+        <!-- contenitore principale, la view JS/Java popolerà 'servicesContainer' -->
+        <div id="servicesContainer" classNames="services-container"></div>
     </layout>
 </view>

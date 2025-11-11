@@ -1,12 +1,14 @@
 package com.company.sitovetrina.view.configsitovetrina;
 
 import com.company.sitovetrina.entity.Configsitovetrina;
+import com.company.sitovetrina.entity.Servizio;
 import com.company.sitovetrina.view.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -24,6 +26,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Route(value = "configsitovetrina",layout = MainView.class)
 @ViewController("Configsitovetrina")
@@ -60,6 +63,8 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
     @ViewComponent private Div previewCarosello1;
     @ViewComponent private Div previewCarosello2;
     @ViewComponent private Div previewCarosello3;
+    @ViewComponent
+    private VerticalLayout serviziUploaderBox;
 
     @Value("${site.files.path}")
     private String filesPath;
@@ -99,6 +104,17 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
 
 
         uploadMap.forEach(this::setupUpload);
+        List<Servizio> servizi = dataManager.load(Servizio.class).all().list();
+        if (servizi.isEmpty()) {
+            serviziUploaderBox.add(new Div() {{
+                setText("Nessun servizio trovato nel database.");
+            }});
+        } else {
+            for (Servizio servizio : servizi) {
+                serviziUploaderBox.add(creaUploaderServizio(servizio));
+            }
+        }
+
         previewMap.keySet().forEach(this::renderPreviewsForBase);
     }
 
@@ -114,6 +130,67 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
                 });
         configsitovetrinaDc.setItem(dataContext.merge(entity));
     }
+    private Component creaUploaderServizio(Servizio servizio) {
+        Div container = new Div();
+
+        // Titolo servizio
+        Div title = new Div();
+        title.setText("📄 Allegati per: " + servizio.getTitolo());
+        title.setClassName("h6");
+        container.add(title);
+
+        // Upload
+        MemoryBuffer buffer = new MemoryBuffer();
+        Upload upload = new Upload(buffer);
+        upload.setMaxFileSize(10485760); // 10MB
+        upload.setDropAllowed(true);
+        upload.setAutoUpload(true);
+        upload.setClassName("custom-upload");
+        upload.setAcceptedFileTypes("image/jpeg", "image/png", "application/pdf");
+
+        upload.addSucceededListener(e -> {
+            try (InputStream in = buffer.getInputStream()) {
+                salvaAllegatoServizio(servizio, e.getFileName(), in);
+                Notification.show("File caricato per " + servizio.getTitolo(), 5000, Notification.Position.TOP_CENTER);
+            } catch (IOException ex) {
+                Notification.show("Errore nel caricamento: " + ex.getMessage(), 5000, Notification.Position.TOP_CENTER);
+            }
+        });
+
+        container.add(upload);
+        return container;
+    }
+    private void salvaAllegatoServizio(Servizio servizio, String fileName, InputStream in) throws IOException {
+        // Cartella base
+        Path baseDir = Paths.get(filesPath);
+        if (!Files.exists(baseDir)) {
+            Files.createDirectories(baseDir);
+        }
+
+        // Prefisso per i file di questo servizio
+        String prefix = "servizio-" + servizio.getId() + "-";
+
+        // 🔹 Elimina eventuali file esistenti per questo servizio
+        try (Stream<Path> existingFiles = Files.list(baseDir)) {
+            existingFiles
+                    .filter(p -> p.getFileName().toString().startsWith(prefix))
+                    .forEach(p -> {
+                        try {
+                            Files.deleteIfExists(p);
+                        } catch (IOException e) {
+                            System.err.println("Errore eliminazione vecchio file: " + e.getMessage());
+                        }
+                    });
+        }
+
+        // 🔹 Salva il nuovo file
+        Path target = baseDir.resolve(prefix + fileName);
+        try (OutputStream out = Files.newOutputStream(target, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            in.transferTo(out);
+        }
+    }
+
+
 
     private void setupUpload(String baseName, Upload upload) {
         MemoryBuffer buffer = new MemoryBuffer();

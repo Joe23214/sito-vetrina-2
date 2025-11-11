@@ -1,10 +1,14 @@
 package com.company.sitovetrina.view.main;
 
+import com.company.sitovetrina.view.home.Home;
 import com.company.sitovetrina.view.login.LoginView;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Nav;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import io.jmix.core.security.CurrentAuthentication;
@@ -34,7 +38,16 @@ public class MainView extends StandardMainView {
     private Button loginButton;
     @ViewComponent
     UserIndicator userIndicator;
-
+    @ViewComponent
+    Div navContent;
+    @Subscribe("hamburgerButton")
+    public void onHamburgerButtonClick(ClickEvent<Button> event) {
+        if (navContent.getClassNames().contains("open")) {
+            navContent.removeClassName("open");
+        } else {
+            navContent.addClassName("open");
+        }
+    }
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
