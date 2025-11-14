@@ -10,9 +10,5 @@ import io.jmix.flowui.view.*;
 @ViewDescriptor(path = "servizio-detail-view.xml")
 @EditedEntityContainer("servizioDc")
 public class ServizioDetailView extends StandardDetailView<Servizio> {
-    @Subscribe
-    public void onBeforeShow(final BeforeShowEvent event) {
-        
-    }
     
 }

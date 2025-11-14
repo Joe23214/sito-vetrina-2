@@ -39,6 +39,11 @@ import java.util.Optional;
 @ViewController(id = "Home")
 @ViewDescriptor(path = "home.xml")
 public class Home extends StandardView {
+    @ViewComponent
+    private Div cookieBanner;
+
+    @ViewComponent
+    private Button acceptCookiesButton;
 
     @ViewComponent
     private Image heroImage;
@@ -62,6 +67,15 @@ public class Home extends StandardView {
     private Image carouselFoto2;
     @ViewComponent
     private Image carouselFoto3;
+    @ViewComponent
+    private Image carouselFoto4;
+    @ViewComponent
+    private Image carouselFoto5;
+    @ViewComponent
+    private Image carouselFoto6;
+    @ViewComponent
+    private Image carouselFoto7;
+
     @ViewComponent
     private H1 homeTitle;
     @Value("${site.files.path}")
@@ -307,6 +321,10 @@ public class Home extends StandardView {
         setStreamResourceIfExists(carouselFoto1, "fotocarosello1-new");
         setStreamResourceIfExists(carouselFoto2, "fotocarosello2-new");
         setStreamResourceIfExists(carouselFoto3, "fotocarosello3-new");
+        setStreamResourceIfExists(carouselFoto4, "fotocarosello4-new");
+        setStreamResourceIfExists(carouselFoto5, "fotocarosello5-new");
+        setStreamResourceIfExists(carouselFoto6, "fotocarosello6-new");
+        setStreamResourceIfExists(carouselFoto7, "fotocarosello7-new");
 
         // GIF animata
         setGifDirect("mediaGif"); // baseName senza suffisso -new
@@ -315,8 +333,19 @@ public class Home extends StandardView {
 
         // Margine inferiore
         getContent().getStyle().set("margin-bottom", "40vh");
+
+        getElement().executeJs("""
+        if (!window.localStorage.getItem('cookiesAccepted')) {
+            document.getElementById('cookieBanner').style.display = 'flex';
+        }
+    """);
     }
 
+    @Subscribe("acceptCookiesButton")
+    public void onAcceptCookiesClick(ClickEvent<Button> event) {
+        cookieBanner.setVisible(false);
+        getElement().executeJs("window.localStorage.setItem('cookiesAccepted', 'true');");
+    }
     private void setStreamResourceIfExists(Image img, String baseName) {
         Path dir = Paths.get(filesPath);
         String[] extensions = {".png", ".jpg", ".jpeg", ".gif", ".webp"};
@@ -395,7 +424,7 @@ public class Home extends StandardView {
         }
     }
 
-  @Subscribe
+ /* @Subscribe
   public void onBeforeShow(BeforeShowEvent event) {
       Configsitovetrina config = dataManager.load(Configsitovetrina.class).id(1).optional().orElse(null);
       if (config == null) return;
@@ -632,6 +661,261 @@ public class Home extends StandardView {
             observer.observe(el);
         });
     """);
-  }
+  }*/
+ @Subscribe
+ public void onBeforeShow(BeforeShowEvent event) {
+     Configsitovetrina config = dataManager.load(Configsitovetrina.class).id(1).optional().orElse(null);
+     if (config == null) return;
 
+     boolean loggedIn = currentAuthentication.getUser().getAuthorities().stream()
+             .noneMatch(auth -> "anonymous-role".equals(auth.getAuthority()));
+
+     String orari = config.getOrari();
+     String linkMaps = config.getLinkMaps();
+     String indirizzo = config.getIndirizzo();
+     String whatsapp = config.getLinkWhatsap(); // numero internazionale senza '+'
+
+     // --- ORARI ---
+     if (orari != null && !orari.isBlank()) {
+         String[] righe = orari.split("\\r?\\n");
+         StringBuilder htmlOrari = new StringBuilder("<ul style='list-style:none; padding:0; margin:0;'>");
+         String[] giorni = {"LUNEDI", "MARTEDI", "MERCOLEDI", "GIOVEDI", "VENERDI", "SABATO", "DOMENICA"};
+
+         for (String riga : righe) {
+             String testo = riga.trim();
+             String giornoColorato = testo;
+
+             for (String giorno : giorni) {
+                 if (testo.toUpperCase().startsWith(giorno)) {
+                     String parteGiorno = testo.substring(0, giorno.length());
+                     String parteResto = testo.substring(giorno.length()).trim();
+                     giornoColorato = "<span style='color: var(--accent-glow); font-weight:700;'>" + parteGiorno + "</span>"
+                             + " <span style='color:#FFFFFF;'>" + parteResto + "</span>";
+                     break;
+                 }
+             }
+
+             htmlOrari.append("<li style='padding:4px 0; font-weight:500;'>").append(giornoColorato).append("</li>");
+         }
+         htmlOrari.append("</ul>");
+         getElement().executeJs("document.getElementById('orariList').innerHTML = $0;", htmlOrari.toString());
+     }
+
+     // --- MAPPA ---
+     if (linkMaps != null && !linkMaps.isBlank()) {
+         getElement().executeJs("""
+            const container = document.querySelector('.luogo-card .map-container');
+            if (container) container.innerHTML = $0;
+            const addrEl = document.getElementById('addressText');
+            if (addrEl) addrEl.innerText = $1 || '';
+        """, linkMaps, indirizzo);
+     }
+
+     // --- FOOTER + SOCIAL + WHATSAPP ---
+     getElement().executeJs("""
+        const nome = $0;
+        const ragione = $1;
+        const indirizzo = $2;
+        const tel = $3;
+        const email = $4;
+        const linkFacebook = $5;
+        const linkInstagram = $6;
+        const linkTikTok = $7;
+        const whatsapp = $8;
+
+        document.getElementById('footerNomeSito').innerText = nome;
+        document.getElementById('footerRagioneSociale').innerText = ragione;
+        document.getElementById('footerIndirizzo').innerText = indirizzo;
+        document.getElementById('footerTelefono').innerText = tel;
+        document.getElementById('footerEmail').innerText = email;
+
+        const socialDiv = document.getElementById('footerSocial');
+        socialDiv.innerHTML = '';
+
+        if (linkFacebook) {
+            const fbImg = document.createElement('img');
+            fbImg.src = 'https://i.postimg.cc/wvKhz8r6/icons8-facebook-50.png';
+            fbImg.style.cursor = 'pointer';
+            fbImg.style.marginRight = '8px';
+            fbImg.addEventListener('click', () => window.open(linkFacebook, '_blank'));
+            socialDiv.appendChild(fbImg);
+        }
+
+        if (linkInstagram) {
+            const instaImg = document.createElement('img');
+            instaImg.src = 'https://i.postimg.cc/RV0JjZ07/icons8-instagram-48.png';
+            instaImg.style.cursor = 'pointer';
+            instaImg.style.marginRight = '8px';
+            instaImg.addEventListener('click', () => window.open(linkInstagram, '_blank'));
+            socialDiv.appendChild(instaImg);
+        }
+
+        if (linkTikTok) {
+            const tikImg = document.createElement('img');
+            tikImg.src = 'https://i.postimg.cc/nVYPwVhy/icons8-tic-toc-50.png';
+            tikImg.style.cursor = 'pointer';
+            tikImg.style.marginRight = '8px';
+            tikImg.addEventListener('click', () => window.open(linkTikTok, '_blank'));
+            socialDiv.appendChild(tikImg);
+        }
+
+        if (whatsapp) {
+            const waImg = document.createElement('img');
+            waImg.src = 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg';
+            waImg.style.cursor = 'pointer';
+            waImg.style.marginRight = '8px';
+            waImg.addEventListener('click', () => location.href = 'https://wa.me/' + whatsapp);
+            socialDiv.appendChild(waImg);
+
+            // Badge WhatsApp fisso
+            if (!document.getElementById('whatsappBadge')) {
+                const badge = document.createElement('a');
+                badge.href = 'https://wa.me/' + whatsapp;
+                badge.target = '_blank';
+                badge.id = 'whatsappBadge';
+                badge.style.position = 'fixed';
+                badge.style.bottom = '20px';
+                badge.style.right = '20px';
+                badge.style.width = '56px';
+                badge.style.height = '56px';
+                badge.style.borderRadius = '50%';
+                badge.style.backgroundColor = '#25D366';
+                badge.style.display = 'flex';
+                badge.style.justifyContent = 'center';
+                badge.style.alignItems = 'center';
+                badge.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                badge.style.cursor = 'pointer';
+                badge.style.zIndex = '9999';
+                badge.innerHTML = `<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" style="width:28px; height:28px; filter: invert(1);">`;
+                document.body.appendChild(badge);
+            }
+        }
+    """,
+             config.getNomeSito(),
+             config.getRagioneSociale(),
+             config.getIndirizzo(),
+             config.getTelefono(),
+             config.getEmailContatti(),
+             config.getLinkFacebook(),
+             config.getLinkInsta(),
+             config.getLinkTikTok(),
+             whatsapp
+     );
+
+     // --- CAROSELLO CINEMATICO ---
+     getElement().executeJs("""
+        const carousel = document.querySelector('.carousel');
+        if (!carousel) return;
+
+        const slides = Array.from(carousel.querySelectorAll('.carousel-image'));
+        if (slides.length === 0) return;
+
+        let index = 0;
+        let timer = null;
+        let isPaused = false;
+
+        slides.forEach(s => {
+            s.style.position = 'absolute';
+            s.style.top = '0';
+            s.style.left = '0';
+            s.style.width = '100%';
+            s.style.height = '100%';
+            s.style.objectFit = 'cover';
+            s.style.opacity = '0';
+            s.style.transition = 'opacity 1.2s ease';
+            s.style.zIndex = '0';
+        });
+
+        const dots = document.createElement('div');
+        dots.className = 'carousel-dots';
+        slides.forEach((_, i) => {
+            const dot = document.createElement('span');
+            dot.className = 'carousel-dot';
+            dot.addEventListener('click', () => goTo(i));
+            dots.appendChild(dot);
+        });
+        carousel.appendChild(dots);
+
+        const left = document.createElement('div');
+        const right = document.createElement('div');
+        left.className = 'carousel-btn left';
+        right.className = 'carousel-btn right';
+        left.innerHTML = '❮';
+        right.innerHTML = '❯';
+        left.onclick = prev;
+        right.onclick = next;
+        carousel.appendChild(left);
+        carousel.appendChild(right);
+
+        function cinematicShow(current, next) {
+            if (!current || !next) return;
+            current.animate([
+                { transform: 'scale(1) translateY(0px)', opacity: 1 },
+                { transform: 'scale(1.1) translateY(30px)', opacity: 0 }
+            ], { duration: 1200, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+
+            next.animate([
+                { transform: 'scale(0.95) translateY(-20px)', opacity: 0 },
+                { transform: 'scale(1) translateY(0px)', opacity: 1 }
+            ], { duration: 1200, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+        }
+
+        function show(i) {
+            const prevSlide = slides[index];
+            const nextSlide = slides[i];
+            slides.forEach(s => s.style.zIndex = '0');
+            prevSlide.style.zIndex = '1';
+            nextSlide.style.zIndex = '2';
+            cinematicShow(prevSlide, nextSlide);
+            slides.forEach((s, n) => s.style.opacity = n === i ? '1' : '0');
+            dots.querySelectorAll('.carousel-dot').forEach((d, n) =>
+                d.classList.toggle('active', n === i)
+            );
+        }
+
+        function goTo(i) { index = (i + slides.length) % slides.length; show(index); }
+        function next() { goTo(index + 1); }
+        function prev() { goTo(index - 1); }
+
+        function startAuto() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => { if (!isPaused) next(); }, 3000);
+        }
+
+        carousel.addEventListener('mouseenter', () => isPaused = true);
+        carousel.addEventListener('mouseleave', () => isPaused = false);
+
+        let startX = 0, diffX = 0;
+        carousel.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        carousel.addEventListener('touchmove', e => diffX = e.touches[0].clientX - startX);
+        carousel.addEventListener('touchend', () => {
+            if (Math.abs(diffX) > 50) diffX < 0 ? next() : prev();
+            diffX = 0;
+        });
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') next();
+            if (e.key === 'ArrowLeft') prev();
+        });
+
+        slides[0].style.opacity = '1';
+        slides[0].style.zIndex = '2';
+        dots.firstChild.classList.add('active');
+        startAuto();
+    """);
+
+     // --- ANIMAZIONE FADE-IN ON SCROLL ---
+     getElement().executeJs("""
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.fade-in-section, .gallery-item').forEach(el => observer.observe(el));
+    """);
+ }
 }

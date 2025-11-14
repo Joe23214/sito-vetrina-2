@@ -31,7 +31,7 @@ a { text-decoration: none; color: inherit; }
     min-height: 400px;
     position: relative;
     width: 100%;
-    height: 80vh;
+    height: 100vh;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -110,14 +110,18 @@ a { text-decoration: none; color: inherit; }
     text-align: center;
     margin: 4rem auto;
     width: 100%;
+    max-height: 800px;
+    max-width: 1200px;
 }
 .media-content {
-    max-width: 1000px;
+    max-width: 1200px;
     width: 80%;
     border-radius: 16px;
     box-shadow: 0 8px 40px rgba(0,0,0,0.4);
     display: block;
     margin: 0 auto;
+    max-height: 800px;
+
 }
 
 /* --- GALLERY SECTION --- */
@@ -140,7 +144,7 @@ a { text-decoration: none; color: inherit; }
 .gallery-item {
     position: relative;
     width: 100%;
-    height: 420px;
+    height: 800px;
     overflow: hidden;
     border-radius: 18px;
     cursor: pointer;
@@ -176,9 +180,9 @@ a { text-decoration: none; color: inherit; }
 /* --- CAROUSEL --- */
 .carousel-section {
     position: relative;
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
-    height: 500px;
+    height: 700px;
     margin: 4rem auto;
     overflow: hidden;
     border-radius: 20px;
@@ -1561,3 +1565,134 @@ vaadin-notification-card::part(close-button) {
     }
 }
 
+/* 💻 Tablet (≤ 1024px) */
+@media (max-width: 1024px) {
+    .media-section {
+        max-width: 900px;
+        max-height: 600px;
+    }
+
+    .media-content {
+        max-width: 90%;
+        max-height: 600px;
+    }
+}
+
+/* 📱 Mobile grande (≤ 768px) */
+@media (max-width: 768px) {
+    .media-section {
+        max-width: 600px;
+        max-height: 400px;
+        margin: 2rem auto;
+    }
+
+    .media-content {
+        max-width: 95%;
+        max-height: 400px;
+        border-radius: 12px;
+    }
+}
+
+/* 📱 Mobile piccolo (≤ 480px) */
+@media (max-width: 480px) {
+    .media-section {
+        max-width: 100%;
+        max-height: 300px;
+    }
+
+    .media-content {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+}
+/* ===============================
+   BANNER COOKIE / PRIVACY - STILE SITO VETRINA
+   =============================== */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-soft);
+    color: var(--text-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    box-shadow: var(--shadow-soft);
+    border-top: 2px solid var(--accent);
+    z-index: 9999;
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+}
+
+.cookie-banner a {
+    color: var(--accent);
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color var(--transition-fast);
+}
+
+.cookie-banner a:hover {
+    color: var(--accent-glow);
+}
+
+#acceptCookiesButton {
+    background-color: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+    box-shadow: 0 6px 18px rgba(212,42,59,0.25);
+}
+
+#acceptCookiesButton:hover {
+    background-color: var(--accent-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(255,68,85,0.28);
+}
+
+#acceptCookiesButton:active {
+    background-color: #b30000;
+    transform: translateY(1px);
+}
+/* ===============================
+   BANNER COOKIE - RESPONSIVE
+   =============================== */
+@media (max-width: 768px) {
+    .cookie-banner {
+        flex-direction: column;      /* testi e pulsante uno sopra l’altro */
+        text-align: center;
+        gap: 10px;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+
+    .cookie-banner a {
+        display: block;              /* link su propria riga */
+        margin: 4px 0;
+    }
+
+    #acceptCookiesButton {
+        width: 100%;                 /* pulsante full width */
+        padding: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .cookie-banner {
+        font-size: 0.85rem;          /* testo leggermente più piccolo */
+        padding: 10px 12px;
+    }
+
+    #acceptCookiesButton {
+        padding: 8px 0;              /* riduce padding per mobile piccolo */
+        font-size: 0.9rem;
+    }
+}

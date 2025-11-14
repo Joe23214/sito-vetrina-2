@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://privacy.title">
+    <layout spacing="true" padding="true">
+        <h2 text="Privacy Policy"/>
+        <!-- Div in cui inietteremo i dati aziendali -->
+        <div id="aziendaDiv"/>
+        <div id="contattiDiv"/>
+        <div id="newsletterDiv"/>
+        <div id="cookiesDiv"/>
+        <div id="dirittiDiv"/>
+    </layout>
+</view>

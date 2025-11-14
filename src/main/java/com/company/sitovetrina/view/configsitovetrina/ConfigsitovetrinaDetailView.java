@@ -64,10 +64,17 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
     @ViewComponent private Upload uploadCarosello1;
     @ViewComponent private Upload uploadCarosello2;
     @ViewComponent private Upload uploadCarosello3;
-
+    @ViewComponent private Upload uploadCarosello4;
+    @ViewComponent private Upload uploadCarosello5;
+    @ViewComponent private Upload uploadCarosello6;
+    @ViewComponent private Upload uploadCarosello7;
     @ViewComponent private Div previewCarosello1;
     @ViewComponent private Div previewCarosello2;
     @ViewComponent private Div previewCarosello3;
+    @ViewComponent private Div previewCarosello4;
+    @ViewComponent private Div previewCarosello5;
+    @ViewComponent private Div previewCarosello6;
+    @ViewComponent private Div previewCarosello7;
     @ViewComponent
     private VerticalLayout serviziUploaderBox;
 
@@ -82,33 +89,41 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
     @Subscribe
     public void onInit(InitEvent event) {
         // --- upload login background ---
-        previewMap = Map.of(
-                "foto1", previewFoto1,
-                "foto2", previewFoto2,
-                "foto3", previewFoto3,
-                "foto4", previewFoto4,
-                "mediaGif", previewGif,
-                "logo", previewLogo,
-                "fotocarosello1", previewCarosello1,
-                "fotocarosello2", previewCarosello2,
-                "fotocarosello3", previewCarosello3,
-                "hero", previewBanner   // 👈 aggiunta
+        previewMap = Map.ofEntries(
+                Map.entry("foto1", previewFoto1),
+                Map.entry("foto2", previewFoto2),
+                Map.entry("foto3", previewFoto3),
+                Map.entry("foto4", previewFoto4),
+                Map.entry("mediaGif", previewGif),
+                Map.entry("logo", previewLogo),
+                Map.entry("fotocarosello1", previewCarosello1),
+                Map.entry("fotocarosello2", previewCarosello2),
+                Map.entry("fotocarosello3", previewCarosello3),
+                Map.entry("fotocarosello4", previewCarosello4),
+                Map.entry("fotocarosello5", previewCarosello5),
+                Map.entry("fotocarosello6", previewCarosello6),
+                Map.entry("fotocarosello7", previewCarosello7),
+                Map.entry("hero", previewBanner)
         );
-      /*  previewMap.put("loginBg", previewLogin);*/
 
-        uploadMap = Map.of(
-                "foto1", uploadFoto1,
-                "foto2", uploadFoto2,
-                "foto3", uploadFoto3,
-                "foto4", uploadFoto4,
-                "mediaGif", uploadGif,
-                "logo", uploadLogo,
-                "fotocarosello1", uploadCarosello1,
-                "fotocarosello2", uploadCarosello2,
-                "fotocarosello3", uploadCarosello3,
-                "hero", uploadBanner    // 👈 aggiunta
+        uploadMap = Map.ofEntries(
+                Map.entry("foto1", uploadFoto1),
+                Map.entry("foto2", uploadFoto2),
+                Map.entry("foto3", uploadFoto3),
+                Map.entry("foto4", uploadFoto4),
+                Map.entry("mediaGif", uploadGif),
+                Map.entry("logo", uploadLogo),
+                Map.entry("fotocarosello1", uploadCarosello1),
+                Map.entry("fotocarosello2", uploadCarosello2),
+                Map.entry("fotocarosello3", uploadCarosello3),
+                Map.entry("fotocarosello4", uploadCarosello4),
+                Map.entry("fotocarosello5", uploadCarosello5),
+                Map.entry("fotocarosello6", uploadCarosello6),
+                Map.entry("fotocarosello7", uploadCarosello7),
+                Map.entry("hero", uploadBanner) // 👈 aggiunta
         );
-      /*  uploadMap.put("loginBg", uploadlogin);*/
+
+        /*  uploadMap.put("loginBg", uploadlogin);*/
 
         uploadMap.forEach(this::setupUpload);
         List<Servizio> servizi = dataManager.load(Servizio.class).all().list();
@@ -222,12 +237,24 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
         int i = fileName.lastIndexOf('.');
         return (i >= 0) ? fileName.substring(i).toLowerCase() : null;
     }
-
     private synchronized void saveWithVersioning(String baseName, String ext, InputStream in) throws IOException {
         Path dir = Paths.get(filesPath);
         if (!Files.exists(dir)) Files.createDirectories(dir);
 
-        // rinomina eventuali -new -> -old
+        // 🔹 1. Elimina tutti i file -old relativi a questo baseName
+        try (Stream<Path> files = Files.list(dir)) {
+            files
+                    .filter(p -> p.getFileName().toString().startsWith(baseName + "-old"))
+                    .forEach(p -> {
+                        try {
+                            Files.deleteIfExists(p);
+                        } catch (IOException e) {
+                            System.err.println("Impossibile eliminare vecchio file -old: " + p.getFileName());
+                        }
+                    });
+        }
+
+        // 🔹 2. Rinomina eventuali -new -> -old
         Files.list(dir)
                 .filter(p -> p.getFileName().toString().startsWith(baseName + "-new"))
                 .forEach(p -> {
@@ -237,6 +264,7 @@ public class ConfigsitovetrinaDetailView extends StandardDetailView<Configsitove
                     } catch (IOException ignored) {}
                 });
 
+        // 🔹 3. Scrive il nuovo file come -new
         Path target = dir.resolve(baseName + "-new" + ext);
         try (OutputStream out = Files.newOutputStream(target, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             in.transferTo(out);

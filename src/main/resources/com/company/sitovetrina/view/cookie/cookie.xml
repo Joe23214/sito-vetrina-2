@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://cookie.title">
+    <layout spacing="true" padding="true">
+        <h2 text="Cookie Policy"/>
+        <div id="introduzioneDiv"/>
+        <div id="tipologieDiv"/>
+        <div id="gestioneDiv"/>
+        <div id="aziendaDiv"/>
+        <div id="contattiDiv"/>
+    </layout>
+</view>

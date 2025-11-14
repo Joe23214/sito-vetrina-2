@@ -51,7 +51,6 @@
             <columns resizable="true">
                 <column property="dataCreazione"/>
                 <column property="descrizione"/>
-                <column property="linkInfo"/>
                 <column property="sottoTitolo"/>
                 <column property="titolo"/>
             </columns>

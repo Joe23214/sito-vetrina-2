@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="Preferenze Cookie">
+    <layout spacing="true" padding="true">
+        <h2 text="Preferenze Cookie"/>
+        <div id="prefDiv"/>
+        <div id="aziendaDiv"/>
+        <div id="contattiDiv"/>
+    </layout>
+</view>

@@ -69,6 +69,10 @@
                     <image id="carouselFoto1" classNames="carousel-image"/>
                     <image id="carouselFoto2" classNames="carousel-image"/>
                     <image id="carouselFoto3" classNames="carousel-image"/>
+                    <image id="carouselFoto4" classNames="carousel-image"/>
+                    <image id="carouselFoto5" classNames="carousel-image"/>
+                    <image id="carouselFoto6" classNames="carousel-image"/>
+                    <image id="carouselFoto7" classNames="carousel-image"/>
 
                 </div>
             </div>
@@ -140,6 +144,16 @@
             </div>
             <p text="© 2025 Tutti i diritti riservati"  classNames="footer-copy"></p>
         </div>
-
+        <!-- BANNER COOKIE / PRIVACY -->
+        <div id="cookieBanner" classNames="cookie-banner" css="display:none;">
+            <span>
+                Il sito utilizza cookie e raccoglie dati secondo la nostra
+                <a href="privacy" target="_blank">Privacy Policy</a> e
+                <a href="cookie" target="_blank">Cookie Policy</a>.
+                Puoi gestire le preferenze in
+                <a href="cookie-preferences" target="_blank">Cookie Preferences</a>.
+            </span>
+            <button id="acceptCookiesButton">Accetto</button>
+        </div>
     </layout>
 </view>

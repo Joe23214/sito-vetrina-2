@@ -191,6 +191,27 @@
                         <upload id="uploadCarosello3" classNames="custom-upload" dropAllowed="true" autoUpload="true" maxFileSize="10485760" />
                         <div id="previewCarosello3" css="border:1px solid #d42a3b; color:#d42a3b; width:350px; height:250px; object-fit:contain;"/>
                     </hbox>
+                    <hbox classNames="mb-xl" spacing="true" alignItems="CENTER">
+                        <span text="Carosello Foto 4" classNames="h6" width="150px"/>
+                        <upload id="uploadCarosello4" classNames="custom-upload" dropAllowed="true" autoUpload="true" maxFileSize="10485760" />
+                        <div id="previewCarosello4" css="border:1px solid #d42a3b; color:#d42a3b; width:350px; height:250px; object-fit:contain;"/>
+                    </hbox>
+                    <hbox classNames="mb-xl" spacing="true" alignItems="CENTER">
+                        <span text="Carosello Foto 5" classNames="h6" width="150px"/>
+                        <upload id="uploadCarosello5" classNames="custom-upload" dropAllowed="true" autoUpload="true" maxFileSize="10485760" />
+                        <div id="previewCarosello5" css="border:1px solid #d42a3b; color:#d42a3b; width:350px; height:250px; object-fit:contain;"/>
+                    </hbox>
+                    <hbox classNames="mb-xl" spacing="true" alignItems="CENTER">
+                        <span text="Carosello Foto 6" classNames="h6" width="150px"/>
+                        <upload id="uploadCarosello6" classNames="custom-upload" dropAllowed="true" autoUpload="true" maxFileSize="10485760" />
+                        <div id="previewCarosello6" css="border:1px solid #d42a3b; color:#d42a3b; width:350px; height:250px; object-fit:contain;"/>
+                    </hbox>
+                    <hbox classNames="mb-xl" spacing="true" alignItems="CENTER">
+                        <span text="Carosello Foto 7" classNames="h6" width="150px"/>
+                        <upload id="uploadCarosello7" classNames="custom-upload" dropAllowed="true" autoUpload="true" maxFileSize="10485760" />
+                        <div id="previewCarosello7" css="border:1px solid #d42a3b; color:#d42a3b; width:350px; height:250px; object-fit:contain;"/>
+                    </hbox>
+
                 </vbox>
                 //servizi
                 <vbox spacing="true" id="serviziUploaderBox" classNames="uploader-section mb-xl">
