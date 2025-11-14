@@ -1,44 +1,45 @@
 package com.company.sitovetrina.view.cookiepreferences;
 
-import com.company.sitovetrina.entity.Configsitovetrina;
 import com.company.sitovetrina.view.main.MainView;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.Route;
-import io.jmix.core.DataManager;
+import io.jmix.flowui.component.checkbox.Switch;
 import io.jmix.flowui.view.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @Route(value = "cookie-preferences", layout = MainView.class)
 @ViewController(id = "CookiePreferences")
 @ViewDescriptor(path = "cookie-preferences.xml")
 public class CookiePreferences extends StandardView {
 
-    @Autowired
-    private DataManager dataManager;
-
     @ViewComponent
-    private Div prefDiv;
-
-    @ViewComponent
-    private Div aziendaDiv;
-
-    @ViewComponent
-    private Div contattiDiv;
+    private Switch switchThirdParty;  // ← ADESSO ESISTE!
 
     @Subscribe
     public void onInit(InitEvent event) {
-        List<Configsitovetrina> list = dataManager.load(Configsitovetrina.class).all().list();
-        if (!list.isEmpty()) {
-            Configsitovetrina config = list.get(0);
+        // Carica il valore precedente dal localStorage
+        getElement().executeJs("""
+            if (localStorage.getItem('thirdPartyCookies') === 'true') {
+                $0.checked = true;
+            } else {
+                $0.checked = false;
+            }
+        """, switchThirdParty.getElement());
+    }
 
-            prefDiv.setText("Imposta qui le tue preferenze sui cookie. Puoi disabilitare quelli non essenziali.");
+    @Subscribe("btnSavePrefs")
+    public void onSavePrefsClick(ClickEvent<Button> event) {
 
-            aziendaDiv.setText(config.getRagioneSociale() + " - P.IVA: " + config.getPiva());
-            contattiDiv.setText("Indirizzo: " + config.getIndirizzo() + ", " + config.getCap() + " " + config.getCitta() +
-                    " | Email: " + config.getEmailContatti() +
-                    " | Telefono: " + config.getTelefono());
-        }
+        boolean allowThird = switchThirdParty.getValue();
+
+        // Salva su localStorage + redirect alla home
+        getElement().executeJs("""
+            localStorage.setItem('cookiesAccepted', 'true');
+            localStorage.setItem('thirdPartyCookies', $0);
+            window.location.href = '/home';
+        """, allowThird);
+
+        Notification.show("Preferenze salvate");
     }
 }

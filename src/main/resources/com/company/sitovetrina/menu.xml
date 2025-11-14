@@ -8,8 +8,4 @@
     <item icon="vaadin:newspaper" view="Messaggio.list" title="config Messagi"/>
     <item icon="vaadin:clipboard-text" view="Newsletter.list" title="msg://com.company.sitovetrina.view.newsletter/newsletterListView.title"/>
     <item  view="Servizio.list" title="config Servizi"/>
-    <item view="Privacy" title="msg://com.company.sitovetrina.view.privacy/privacy.title"/>
-    <item view="Cookie" title="msg://com.company.sitovetrina.view.cookie/cookie.title"/>
-    <item view="CookiePreferences"
-          title="msg://com.company.sitovetrina.view.cookiepreferences/cookiePreferences.title"/>
 </menu-config>

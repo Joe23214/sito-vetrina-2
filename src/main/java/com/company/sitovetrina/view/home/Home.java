@@ -2,7 +2,10 @@ package com.company.sitovetrina.view.home;
 
 import com.company.sitovetrina.entity.Configsitovetrina;
 import com.company.sitovetrina.entity.Newsletter;
+import com.company.sitovetrina.view.cookie.Cookie;
+import com.company.sitovetrina.view.cookiepreferences.CookiePreferences;
 import com.company.sitovetrina.view.main.MainView;
+import com.company.sitovetrina.view.privacy.Privacy;
 import com.company.sitovetrina.view.servizi.Servizi;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
@@ -23,6 +26,7 @@ import io.jmix.email.EmailInfoBuilder;
 import io.jmix.email.Emailer;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.ViewNavigators;
+import io.jmix.flowui.component.checkbox.JmixCheckbox;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +45,18 @@ import java.util.Optional;
 public class Home extends StandardView {
     @ViewComponent
     private Div cookieBanner;
-
+    @ViewComponent
+    private Div privacy;
     @ViewComponent
     private Button acceptCookiesButton;
-
+    @ViewComponent
+    private Div cookiePref;
+    @ViewComponent
+    private Div cookie;
     @ViewComponent
     private Image heroImage;
-    @ViewComponent("mediaSection")
-    private Div mediaGifContainer;
+    @ViewComponent
+    private Div mediaSection;
     @ViewComponent
     private Image foto1;
     @ViewComponent
@@ -75,7 +83,8 @@ public class Home extends StandardView {
     private Image carouselFoto6;
     @ViewComponent
     private Image carouselFoto7;
-
+    @ViewComponent
+    private JmixCheckbox checkNewsletter;
     @ViewComponent
     private H1 homeTitle;
     @Value("${site.files.path}")
@@ -106,6 +115,21 @@ public class Home extends StandardView {
     @Autowired
     private ViewNavigators viewNavigators;
 
+    @Subscribe(id = "cookie", subject = "clickListener")
+    public void onCookieClick(final ClickEvent<Div> event) {
+        viewNavigators.view(this, Cookie.class).navigate();
+    }
+
+    @Subscribe(id = "cookiePref", subject = "clickListener")
+    public void onCookiePrefClick(final ClickEvent<Div> event) {
+        viewNavigators.view(this, CookiePreferences.class).navigate();
+    }
+
+
+    @Subscribe(id = "privacy", subject = "clickListener")
+    public void onPrivacyClick(final ClickEvent<Div> event) {
+        viewNavigators.view(this, Privacy.class).navigate();
+    }
     @Subscribe(id = "serviceButton", subject = "clickListener")
     public void onServiceButtonClick(final ClickEvent<JmixButton> event) {
         viewNavigators.view(this, Servizi.class).navigate();
@@ -235,6 +259,7 @@ public class Home extends StandardView {
         if (email == null || email.isBlank()) {
             notifications.create("Inserisci una email!")
                     .withType(Notifications.Type.WARNING)
+                    .withDuration(3000)
                     .show();
             return;
         }
@@ -242,6 +267,15 @@ public class Home extends StandardView {
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
             notifications.create("Formato email non valido!")
                     .withType(Notifications.Type.WARNING)
+                    .withDuration(3000)
+                    .show();
+            return;
+        }
+
+        if(!checkNewsletter.isInvalid()){
+            notifications.create("Confermare di aver letto la Privacy Policy ")
+                    .withType(Notifications.Type.WARNING)
+                    .withDuration(3000)
                     .show();
             return;
         }
@@ -255,6 +289,7 @@ public class Home extends StandardView {
         if (existing.isPresent()) {
             notifications.create("Questa email è già iscritta alla newsletter.")
                     .withType(Notifications.Type.WARNING)
+                    .withDuration(3000)
                     .show();
             return;
         }
@@ -335,17 +370,29 @@ public class Home extends StandardView {
         getContent().getStyle().set("margin-bottom", "40vh");
 
         getElement().executeJs("""
-        if (!window.localStorage.getItem('cookiesAccepted')) {
-            document.getElementById('cookieBanner').style.display = 'flex';
-        }
-    """);
+    if (!localStorage.getItem('cookiesAccepted')) {
+        document.getElementById('cookieBanner').style.display = 'flex';
     }
 
-    @Subscribe("acceptCookiesButton")
-    public void onAcceptCookiesClick(ClickEvent<Button> event) {
-        cookieBanner.setVisible(false);
-        getElement().executeJs("window.localStorage.setItem('cookiesAccepted', 'true');");
+    document.getElementById('cookieAcceptAll').onclick = () => {
+        localStorage.setItem('cookiesAccepted', 'true');
+        localStorage.setItem('thirdPartyCookies', 'true');
+        location.reload();
+    };
+
+    document.getElementById('cookieReject').onclick = () => {
+        localStorage.setItem('cookiesAccepted', 'true');
+        localStorage.setItem('thirdPartyCookies', 'false');
+        location.reload();
+    };
+
+    document.getElementById('cookiePrefsOpen').onclick = () => {
+        window.location.href = '/cookie-preferences';
+    };
+""");
+
     }
+
     private void setStreamResourceIfExists(Image img, String baseName) {
         Path dir = Paths.get(filesPath);
         String[] extensions = {".png", ".jpg", ".jpeg", ".gif", ".webp"};
@@ -423,245 +470,6 @@ public class Home extends StandardView {
             Notification.show("GIF non trovata: " + baseName, 4000, Notification.Position.TOP_CENTER);
         }
     }
-
- /* @Subscribe
-  public void onBeforeShow(BeforeShowEvent event) {
-      Configsitovetrina config = dataManager.load(Configsitovetrina.class).id(1).optional().orElse(null);
-      if (config == null) return;
-
-      boolean loggedIn = currentAuthentication.getUser().getAuthorities().stream()
-              .noneMatch(auth -> "anonymous-role".equals(auth.getAuthority()));
-
-      Configsitovetrina cfg = config; // già caricato
-      if (cfg != null) {
-          String orari = cfg.getOrari();
-          String linkMaps = cfg.getLinkMaps();
-          String indirizzo = cfg.getIndirizzo();
-          String whatsapp = cfg.getLinkWhatsap(); // numero internazionale senza '+', es: 393401234567
-
-          // --- Orari ---
-          if (orari != null && !orari.isBlank()) {
-              String[] righe = orari.split("\\r?\\n");
-              StringBuilder htmlOrari = new StringBuilder("<ul style='list-style:none; padding:0; margin:0;'>");
-
-              // Giorni della settimana (in maiuscolo per il match)
-              String[] giorni = {"LUNEDI", "MARTEDI", "MERCOLEDI", "GIOVEDI", "VENERDI", "SABATO", "DOMENICA"};
-
-              for (String riga : righe) {
-                  String testo = riga.trim();
-                  String giornoColorato = testo;
-
-                  // Cerca il giorno nella riga e lo colora
-                  for (String giorno : giorni) {
-                      if (testo.toUpperCase().startsWith(giorno)) {
-                          // Evidenzia il giorno in rosso (accent color)
-                          String parteGiorno = testo.substring(0, giorno.length());
-                          String parteResto = testo.substring(giorno.length()).trim();
-
-                          giornoColorato = "<span style='color: var(--accent-glow); font-weight:700;'>" + parteGiorno + "</span>"
-                                  + " <span style='color:#FFFFFF;'>" + parteResto + "</span>";
-                          break;
-                      }
-                  }
-
-                  htmlOrari.append("<li style='padding:4px 0; font-weight:500;'>").append(giornoColorato).append("</li>");
-              }
-
-              htmlOrari.append("</ul>");
-              getElement().executeJs("document.getElementById('orariList').innerHTML = $0;", htmlOrari.toString());
-          }
-
-          if (linkMaps != null && !linkMaps.isBlank()) {
-              // Rimuove il contenuto statico e inserisce l’HTML del backend
-              getElement().executeJs("""
-        const container = document.querySelector('.luogo-card .map-container');
-        if (container) {
-            container.innerHTML = $0; // inserisce direttamente l’iframe da backend
-        }
-        const addrEl = document.getElementById('addressText');
-        if (addrEl) addrEl.innerText = $1 || '';
-    """, linkMaps, indirizzo);
-          }
-
-          // --- POPOLAMENTO FOOTER + SOCIAL + WHATSAPP ---
-          getElement().executeJs("""
-            const nome = $0;
-            const ragione = $1;
-            const indirizzo = $2;
-            const tel = $3;
-            const email = $4;
-            const socialDiv = document.getElementById('footerSocial');
-
-            document.getElementById('footerNomeSito').innerText = nome;
-            document.getElementById('footerRagioneSociale').innerText = ragione;
-            document.getElementById('footerIndirizzo').innerText = indirizzo;
-            document.getElementById('footerTelefono').innerText = tel;
-            document.getElementById('footerEmail').innerText = email;
-
-            socialDiv.innerHTML = '';
-            if ($5) socialDiv.innerHTML += `<img src="https://i.postimg.cc/wvKhz8r6/icons8-facebook-50.png" style="cursor:pointer; margin-right:8px;" onclick="window.open('$5','_blank')"/>`;
-            if ($6) socialDiv.innerHTML += `<img src="https://i.postimg.cc/RV0JjZ07/icons8-instagram-48.png" style="cursor:pointer; margin-right:8px;" onclick="window.open('$6','_blank')"/>`;
-            if ($7) socialDiv.innerHTML += `<img src="https://i.postimg.cc/nVYPwVhy/icons8-tic-toc-50.png" style="cursor:pointer; margin-right:8px;" onclick="window.open('$7','_blank')"/>`;
-            if ($8) socialDiv.innerHTML += `<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" style="cursor:pointer; margin-right:8px;" onclick="location.href='https://wa.me/${$8}'"/>`;
-
-            // --- Badge WhatsApp fisso in basso a destra ---
-            if ($8) {
-            if (!document.getElementById('whatsappBadge')) {
-            let badge = document.createElement('a');
-                badge.href = 'https://wa.me/' + $8;
-                badge.target = '_blank';
-                badge.id = 'whatsappBadge';
-                badge.style.position = 'fixed';
-                badge.style.bottom = '20px';
-                badge.style.right = '20px';
-                badge.style.width = '56px';
-                badge.style.height = '56px';
-                badge.style.borderRadius = '50%';
-                badge.style.backgroundColor = '#25D366';
-                badge.style.display = 'flex';
-                badge.style.justifyContent = 'center';
-                badge.style.alignItems = 'center';
-                badge.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-                badge.style.cursor = 'pointer';
-                badge.style.zIndex = '9999';
-               badge.innerHTML = `<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" style="width:28px; height:28px; filter: invert(1);">`;
-                document.body.appendChild(badge);
-            }                
-            }
-        """,
-                  config.getNomeSito(),
-                  config.getRagioneSociale(),
-                  config.getIndirizzo(),
-                  config.getTelefono(),
-                  config.getEmailContatti(),
-                  config.getLinkFacebook(),
-                  config.getLinkInsta(),
-                  config.getLinkTikTok(),
-                  whatsapp
-          );
-      }
-
-      // --- CAROSELLO CINEMATICO ---
-      getElement().executeJs("""
-        const carousel = document.querySelector('.carousel');
-        if (!carousel) return;
-
-        const slides = Array.from(carousel.querySelectorAll('.carousel-image'));
-        if (slides.length === 0) return;
-
-        let index = 0;
-        let timer = null;
-        let isPaused = false;
-
-        slides.forEach(s => {
-            s.style.position = 'absolute';
-            s.style.top = '0';
-            s.style.left = '0';
-            s.style.width = '100%';
-            s.style.height = '100%';
-            s.style.objectFit = 'cover';
-            s.style.opacity = '0';
-            s.style.transition = 'opacity 1.2s ease';
-            s.style.zIndex = '0';
-        });
-
-        const dots = document.createElement('div');
-        dots.className = 'carousel-dots';
-        slides.forEach((_, i) => {
-            const dot = document.createElement('span');
-            dot.className = 'carousel-dot';
-            dot.addEventListener('click', () => goTo(i));
-            dots.appendChild(dot);
-        });
-        carousel.appendChild(dots);
-
-        const left = document.createElement('div');
-        const right = document.createElement('div');
-        left.className = 'carousel-btn left';
-        right.className = 'carousel-btn right';
-        left.innerHTML = '❮';
-        right.innerHTML = '❯';
-        left.onclick = prev;
-        right.onclick = next;
-        carousel.appendChild(left);
-        carousel.appendChild(right);
-
-        function cinematicShow(current, next) {
-            if (!current || !next) return;
-            current.animate([
-                { transform: 'scale(1) translateY(0px)', opacity: 1 },
-                { transform: 'scale(1.1) translateY(30px)', opacity: 0 }
-            ], { duration: 1200, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
-
-            next.animate([
-                { transform: 'scale(0.95) translateY(-20px)', opacity: 0 },
-                { transform: 'scale(1) translateY(0px)', opacity: 1 }
-            ], { duration: 1200, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
-        }
-
-        function show(i) {
-            const prevSlide = slides[index];
-            const nextSlide = slides[i];
-            slides.forEach(s => s.style.zIndex = '0');
-            prevSlide.style.zIndex = '1';
-            nextSlide.style.zIndex = '2';
-            cinematicShow(prevSlide, nextSlide);
-            slides.forEach((s, n) => s.style.opacity = n === i ? '1' : '0');
-            dots.querySelectorAll('.carousel-dot').forEach((d, n) =>
-                d.classList.toggle('active', n === i)
-            );
-        }
-
-        function goTo(i) {
-            index = (i + slides.length) % slides.length;
-            show(index);
-        }
-        function next() { goTo(index + 1); }
-        function prev() { goTo(index - 1); }
-
-        function startAuto() {
-            if (timer) clearInterval(timer);
-            timer = setInterval(() => { if (!isPaused) next(); }, 3000);
-        }
-
-        carousel.addEventListener('mouseenter', () => isPaused = true);
-        carousel.addEventListener('mouseleave', () => isPaused = false);
-
-        let startX = 0, diffX = 0;
-        carousel.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-        carousel.addEventListener('touchmove', e => diffX = e.touches[0].clientX - startX);
-        carousel.addEventListener('touchend', () => {
-            if (Math.abs(diffX) > 50) diffX < 0 ? next() : prev();
-            diffX = 0;
-        });
-
-        window.addEventListener('keydown', e => {
-            if (e.key === 'ArrowRight') next();
-            if (e.key === 'ArrowLeft') prev();
-        });
-
-        slides[0].style.opacity = '1';
-        slides[0].style.zIndex = '2';
-        dots.firstChild.classList.add('active');
-        startAuto();
-    """);
-
-      // --- ANIMAZIONE FADE-IN ON SCROLL ---
-      getElement().executeJs("""
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.15 });
-
-        document.querySelectorAll('.fade-in-section, .gallery-item').forEach(el => {
-            observer.observe(el);
-        });
-    """);
-  }*/
  @Subscribe
  public void onBeforeShow(BeforeShowEvent event) {
      Configsitovetrina config = dataManager.load(Configsitovetrina.class).id(1).optional().orElse(null);
@@ -702,14 +510,27 @@ public class Home extends StandardView {
      }
 
      // --- MAPPA ---
-     if (linkMaps != null && !linkMaps.isBlank()) {
-         getElement().executeJs("""
-            const container = document.querySelector('.luogo-card .map-container');
-            if (container) container.innerHTML = $0;
-            const addrEl = document.getElementById('addressText');
-            if (addrEl) addrEl.innerText = $1 || '';
-        """, linkMaps, indirizzo);
-     }
+     getElement().executeJs("""
+    const container = document.querySelector('.luogo-card .map-container');
+
+    if (!container) return;
+
+    if (localStorage.getItem('thirdPartyCookies') === 'true') {
+        container.innerHTML = $0;
+    } else {
+        container.innerHTML = `
+            <div style="color:white; text-align:center; padding:20px;">
+                Per visualizzare la mappa è necessario accettare i cookie di terze parti.<br>
+                <button id="enableMaps" style="margin-top:10px;">Abilita</button>
+            </div>
+        `;
+        document.getElementById('enableMaps').onclick = () => {
+            localStorage.setItem('thirdPartyCookies','true');
+            location.reload();
+        };
+    }
+""", linkMaps);
+
 
      // --- FOOTER + SOCIAL + WHATSAPP ---
      getElement().executeJs("""

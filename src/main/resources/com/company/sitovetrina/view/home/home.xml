@@ -61,6 +61,7 @@
             <div id="aboutCard2" classNames="about-card fade-in-section">
                 <h3 id="aboutTitle2"></h3>
                 <div id="aboutText2" classNames="about-text"></div>
+
                 <button id="serviceButton" alignSelf="CENTER" text="msg://Vai!" classNames="newsletter-button"></button>
             </div>
             <!-- Carosello immagini finali -->
@@ -118,6 +119,9 @@
                 </div>
                 <div classNames="newsletter-form">
                     <textField id="newsletterEmail" placeholder="Inserisci la tua email" classNames="newsletter-input" />
+                    <checkbox id="checkNewsletter" helperText="Confermo di aver letto la Privacy Policy e acconsento al trattamento del mio indirizzo email
+per l’invio della newsletter aziendale.
+"></checkbox>
                     <button id="newsletterButton" text="Iscriviti" classNames="newsletter-button"/>
                 </div>
             </div>
@@ -126,34 +130,40 @@
         <!-- FOOTER -->
         <div id="footerSection" classNames="footer-section">
             <div  classNames="footer-content">
-                <div classNames="footer-col">
+                <div css="width:20%;" classNames="footer-col">
                     <h3 text="Riferimenti" ></h3>
                     <p id="footerNomeSito"></p>
                     <p id="footerRagioneSociale"></p>
                     <p id="footerIndirizzo"></p>
                 </div>
-                <div classNames="footer-col">
+                <div css="width:20%;" classNames="footer-col">
                     <h3 text="Contatti"></h3>
                     <p id="footerTelefono"></p>
                     <p id="footerEmail"></p>
                 </div>
-                <div classNames="footer-col">
+                <div css="width:20%;" classNames="footer-col">
                     <h3 text="Seguici"></h3>
                     <div id="footerSocial" classNames="footer-social"></div>
+                </div>
+                <div css="width:20%;" classNames="footer-col">
+                    <span text=" Il sito utilizza cookie e raccoglie dati secondo la nostra ">  </span>
+                        <div css="color:#d42a3b;" id="privacy" text="Privacy Policy "></div>
+                    <div text=" e "></div>
+                        <div css="color:#d42a3b;" id="cookie" text="Cookie Policy"/>
+                        <div text="Puoi gestire le preferenze in"></div>.
+                        <div css="color:#d42a3b;" id="cookiePref" text="Cookie Preferences"></div>.
                 </div>
             </div>
             <p text="© 2025 Tutti i diritti riservati"  classNames="footer-copy"></p>
         </div>
         <!-- BANNER COOKIE / PRIVACY -->
         <div id="cookieBanner" classNames="cookie-banner" css="display:none;">
-            <span>
-                Il sito utilizza cookie e raccoglie dati secondo la nostra
-                <a href="privacy" target="_blank">Privacy Policy</a> e
-                <a href="cookie" target="_blank">Cookie Policy</a>.
-                Puoi gestire le preferenze in
-                <a href="cookie-preferences" target="_blank">Cookie Preferences</a>.
-            </span>
-            <button id="acceptCookiesButton">Accetto</button>
+            <span text="Questo sito utilizza cookie tecnici e, previo consenso, cookie di terze parti."></span>
+
+            <button id="cookieReject" text="Rifiuta"></button>
+            <button id="cookiePrefsOpen" text="Personalizza"></button>
+            <button id="cookieAcceptAll" text="Accetta tutto"></button>
         </div>
+
     </layout>
 </view>

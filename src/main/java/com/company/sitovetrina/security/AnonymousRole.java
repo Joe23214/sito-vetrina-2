@@ -13,7 +13,7 @@ import io.jmix.securityflowui.role.annotation.ViewPolicy;
 public interface AnonymousRole {
     String CODE = "anonymous-role";
 
-    @ViewPolicy(viewIds = {"Home", "LoginView", "Servizi"})
+    @ViewPolicy(viewIds = {"Home", "LoginView", "Servizi", "Cookie", "CookiePreferences", "Privacy"})
     void screens();
 
     @SpecificPolicy(resources = "ui.loginToUi")
